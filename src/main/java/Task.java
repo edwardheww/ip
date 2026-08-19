@@ -16,9 +16,13 @@ public class Task {
         this.checked = false;
     }
 
+    private String getCheckbox() {
+        return this.checked ? "[X]" : "[ ]";
+    }
+
     @Override
     public String toString() {
-        return (this.checked ? "[X]" : "[ ]") + " " + this.task;
+        return this.getCheckbox() + " " + this.task;
     }
 
 }
