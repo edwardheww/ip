@@ -32,7 +32,12 @@ public class WALLE {
 
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
-            System.out.printf("\n   %s\n\n", input);
+            if (input.equals("list")) {
+                WALLE.list();
+            } else {
+                WALLE.addToMemory(input);
+                System.out.printf("\n   added: %s\n\n", input);
+            }
             input = scanner.nextLine();
         }
 
@@ -57,12 +62,15 @@ public class WALLE {
     private static void list() {
 
         // Print out user message history stored in memory
+        System.out.println(""); // Used for newline
         for (int pos = 0; pos < memPos; pos++) {
-            System.out.println((pos + 1)
-                    + ". "
-                    + memory[pos]
-                    + "\n");
+            System.out.println(
+                    "   "
+                            + (pos + 1)
+                            + ". "
+                            + memory[pos]);
         }
+        System.out.println(""); // Used for newline
 
     }
 
