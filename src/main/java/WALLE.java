@@ -12,11 +12,11 @@ public class WALLE {
         System.out.println(greeting);
 
         // Start process of echoing user input
-        WALLE.echoUntilBye();
+        WALLE.interactUntilBye();
 
     }
 
-    private static void echoUntilBye() {
+    private static void interactUntilBye() {
 
         // Listen for first user input
         Scanner scanner = new Scanner(System.in);
