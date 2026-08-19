@@ -2,6 +2,9 @@ import java.util.Scanner;
 
 public class WALLE {
 
+    // Memory of what user says
+    private static String[] memory;
+
     public static void main(String[] args) {
 
         // Greeting when started
@@ -10,6 +13,9 @@ public class WALLE {
                 + "What can I do for you?\n"
                 + "———————————————————————\n";
         System.out.println(greeting);
+
+        // Initialise WALLE's memory
+        memory = new String[100];
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
