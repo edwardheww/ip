@@ -73,4 +73,22 @@ public class WALLE {
 
     }
 
+    private static void mark(int pos) {
+
+        // Mark specific task in memory as done
+        WALLE.memory[pos - 1].check();
+        System.out.printf("    Nice! I've marked this task as done:\n"
+                + "        %s\n", WALLE.memory[pos - 1]);
+
+    }
+
+    private static void unmark(int pos) {
+
+        // Mark specific task in memory as not done
+        WALLE.memory[pos - 1].uncheck();
+        System.out.printf("    OK, I've marked this task as not done yet:\n"
+                + "        %s\n", WALLE.memory[pos - 1]);
+
+    }
+
 }
