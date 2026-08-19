@@ -44,4 +44,14 @@ public class WALLE {
 
     }
 
+    private static void addToMemory(String input) {
+
+        // Add input to current empty slot in memory that memPos is pointing at
+        memory[memPos] = input;
+
+        // Increment memPos to point at next empty slot
+        memPos++;
+
+    }
+
 }
