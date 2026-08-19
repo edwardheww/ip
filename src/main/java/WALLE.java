@@ -54,4 +54,16 @@ public class WALLE {
 
     }
 
+    private static void list() {
+
+        // Print out user message history stored in memory
+        for (int pos = 0; pos < memPos; pos++) {
+            System.out.println((pos + 1)
+                    + ". "
+                    + memory[pos]
+                    + "\n");
+        }
+
+    }
+
 }
