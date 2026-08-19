@@ -4,6 +4,7 @@ public class WALLE {
 
     // Memory of what user says
     private static String[] memory;
+    private static int memPos;
 
     public static void main(String[] args) {
 
@@ -14,8 +15,9 @@ public class WALLE {
                 + "———————————————————————\n";
         System.out.println(greeting);
 
-        // Initialise WALLE's memory
-        memory = new String[100];
+        // Initialise WALLE's memory & position pointer
+        WALLE.memory = new String[100];
+        WALLE.memPos = 0;
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
