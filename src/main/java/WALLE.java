@@ -34,6 +34,12 @@ public class WALLE {
         while (!input.equals("bye")) {
             if (input.equals("list")) {
                 WALLE.list();
+            } else if (input.matches("mark \\d")) {
+                int pos = Integer.valueOf(input.split(" ")[1]);
+                WALLE.mark(pos);
+            } else if (input.matches("unmark \\d")) {
+                int pos = Integer.valueOf(input.split(" ")[1]);
+                WALLE.unmark(pos);
             } else {
                 WALLE.addToMemory(input);
                 System.out.printf("\n   added: %s\n\n", input);
@@ -77,8 +83,8 @@ public class WALLE {
 
         // Mark specific task in memory as done
         WALLE.memory[pos - 1].check();
-        System.out.printf("    Nice! I've marked this task as done:\n"
-                + "        %s\n", WALLE.memory[pos - 1]);
+        System.out.printf("\n    Nice! I've marked this task as done:\n"
+                + "        %s\n\n", WALLE.memory[pos - 1]);
 
     }
 
@@ -86,8 +92,8 @@ public class WALLE {
 
         // Mark specific task in memory as not done
         WALLE.memory[pos - 1].uncheck();
-        System.out.printf("    OK, I've marked this task as not done yet:\n"
-                + "        %s\n", WALLE.memory[pos - 1]);
+        System.out.printf("\n    OK, I've marked this task as not done yet:\n"
+                + "        %s\n\n", WALLE.memory[pos - 1]);
 
     }
 
