@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class WALLE {
 
     // Memory of what user says
-    private static String[] memory;
+    private static Task[] memory;
     private static int memPos;
 
     public static void main(String[] args) {
@@ -16,7 +16,7 @@ public class WALLE {
         System.out.println(greeting);
 
         // Initialise WALLE's memory & position pointer
-        WALLE.memory = new String[100];
+        WALLE.memory = new Task[100];
         WALLE.memPos = 0;
 
         // Start process of echoing user input
@@ -52,7 +52,7 @@ public class WALLE {
     private static void addToMemory(String input) {
 
         // Add input to current empty slot in memory that memPos is pointing at
-        memory[memPos] = input;
+        memory[memPos] = new Task(input);
 
         // Increment memPos to point at next empty slot
         memPos++;
@@ -62,13 +62,12 @@ public class WALLE {
     private static void list() {
 
         // Print out user message history stored in memory
-        System.out.println(""); // Used for newline
+        System.out.println("\n  Here are the tasks in your list:"); // Used for newline
         for (int pos = 0; pos < memPos; pos++) {
-            System.out.println(
-                    "   "
-                            + (pos + 1)
-                            + ". "
-                            + memory[pos]);
+            System.out.println("   "
+                    + (pos + 1)
+                    + "."
+                    + memory[pos]);
         }
         System.out.println(""); // Used for newline
 
