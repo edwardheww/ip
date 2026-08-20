@@ -50,6 +50,16 @@ public class WALLE {
                     WALLE.unmark(pos);
                 }
 
+                // Delete a task
+                else if (input.matches("delete \\d")) {
+                    int pos = Integer.valueOf(input.split(" ")[1]);
+                    Task tmp = memory.get(pos - 1);
+                    memory.remove(pos - 1);
+                    System.out.println("\n    Got it! I've removed the task:\n"
+                            + "        " + tmp
+                            + "\n    " + memory.size() + " task(s) left, let's go :D\n");
+                }
+
                 // Error handling: proper task type, missing description
                 else if (input.strip().equals("todo") || input.strip().equals("deadline")
                         || input.strip().equals("event")) {
