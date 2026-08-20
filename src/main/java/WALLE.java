@@ -33,59 +33,69 @@ public class WALLE {
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
 
-            // List tasks
-            if (input.equals("list")) {
-                WALLE.list();
-            }
-
-            // Mark a task
-            else if (input.matches("mark \\d")) {
-                int pos = Integer.valueOf(input.split(" ")[1]);
-                WALLE.mark(pos);
-            }
-
-            // Unmark a task
-            else if (input.matches("unmark \\d")) {
-                int pos = Integer.valueOf(input.split(" ")[1]);
-                WALLE.unmark(pos);
-            }
-
-            // Add a task (in general)
-            else {
-
-                System.out.println("\n    Got it! I've added the task:");
-
-                // Current task in question
-                Task newTask;
-
-                // Add a ToDo Task
-                if (input.startsWith("todo ")) {
-                    newTask = new ToDo(input.substring(5));
+            try {
+                // List tasks
+                if (input.equals("list")) {
+                    WALLE.list();
                 }
 
-                // Add a Deadline Task
-                else if (input.startsWith("deadline ")) {
-                    String taskName = input.substring(9).split(" /by ")[0];
-                    String endDT = input.substring(9).split(" /by ")[1];
-                    newTask = new Deadline(taskName, endDT);
+                // Mark a task
+                else if (input.matches("mark \\d")) {
+                    int pos = Integer.valueOf(input.split(" ")[1]);
+                    WALLE.mark(pos);
                 }
 
-                // Add an Event Task
-                else if (input.startsWith("event ")) {
-                    String taskName = input.substring(6).split(" /from ")[0];
-                    String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
-                    String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
-                    newTask = new Event(taskName, startDT, endDT);
+                // Unmark a task
+                else if (input.matches("unmark \\d")) {
+                    int pos = Integer.valueOf(input.split(" ")[1]);
+                    WALLE.unmark(pos);
                 }
 
-                // Add a normal Task
+                // Error handling: proper task type, missing description
+                else if (input.strip().equals("todo") || input.strip().equals("deadline")
+                        || input.strip().equals("event")) {
+                    throw new MissingDescException(input.strip());
+                }
+
+                // Add a task (in general)
                 else {
-                    newTask = new Task(input);
-                }
 
-                WALLE.addToMemory(newTask);
-                System.out.printf("        %s\n", newTask);
-                System.out.printf("    Now you have %d task(s) on your list!\n\n", memPos);
+                    // Current task in question
+                    Task newTask;
+
+                    // Add a ToDo Task
+                    if (input.startsWith("todo")) {
+                        newTask = new ToDo(input.substring(5));
+                    }
+
+                    // Add a Deadline Task
+                    else if (input.startsWith("deadline")) {
+                        String taskName = input.substring(9).split(" /by ")[0];
+                        String endDT = input.substring(9).split(" /by ")[1];
+                        newTask = new Deadline(taskName, endDT);
+                    }
+
+                    // Add an Event Task
+                    else if (input.startsWith("event")) {
+                        String taskName = input.substring(6).split(" /from ")[0];
+                        String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
+                        String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
+                        newTask = new Event(taskName, startDT, endDT);
+                    }
+
+                    // Add a normal Task
+                    else {
+                        String taskName = input.split(" ")[0];
+                        throw new InvalidTaskTypeException(taskName);
+                    }
+
+                    WALLE.addToMemory(newTask);
+                    System.out.println("\n    Got it! I've added the task:");
+                    System.out.printf("        %s\n", newTask);
+                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memPos);
+                }
+            } catch (WALLEException e) {
+                System.out.println(e.getMessage());
             }
 
             // Get next user input
