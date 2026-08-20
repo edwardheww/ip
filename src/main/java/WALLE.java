@@ -32,16 +32,16 @@ public class WALLE {
 
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
-            if (input.equals("list")) {
+            if (input.equals("list")) { // list tasks
                 WALLE.list();
-            } else if (input.matches("mark \\d")) {
+            } else if (input.matches("mark \\d")) { // mark a task
                 int pos = Integer.valueOf(input.split(" ")[1]);
                 WALLE.mark(pos);
-            } else if (input.matches("unmark \\d")) {
+            } else if (input.matches("unmark \\d")) { // unmark a task
                 int pos = Integer.valueOf(input.split(" ")[1]);
                 WALLE.unmark(pos);
             } else {
-                WALLE.addToMemory(input);
+                WALLE.addToMemory(new Task(input));
                 System.out.printf("\n   added: %s\n\n", input);
             }
             input = scanner.nextLine();
@@ -55,10 +55,10 @@ public class WALLE {
 
     }
 
-    private static void addToMemory(String input) {
+    private static void addToMemory(Task newTask) {
 
         // Add input to current empty slot in memory that memPos is pointing at
-        memory[memPos] = new Task(input);
+        memory[memPos] = newTask;
 
         // Increment memPos to point at next empty slot
         memPos++;
