@@ -32,18 +32,60 @@ public class WALLE {
 
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
-            if (input.equals("list")) { // list tasks
+
+            // List tasks
+            if (input.equals("list")) {
                 WALLE.list();
-            } else if (input.matches("mark \\d")) { // mark a task
+            }
+
+            // Mark a task
+            else if (input.matches("mark \\d")) {
                 int pos = Integer.valueOf(input.split(" ")[1]);
                 WALLE.mark(pos);
-            } else if (input.matches("unmark \\d")) { // unmark a task
+            }
+
+            // Unmark a task
+            else if (input.matches("unmark \\d")) {
                 int pos = Integer.valueOf(input.split(" ")[1]);
                 WALLE.unmark(pos);
-            } else {
-                WALLE.addToMemory(new Task(input));
+            }
+
+            // Add a task (in general)
+            else {
+
+                // Current task in question
+                Task newTask;
+
+                // Add a ToDo Task
+                if (input.startsWith("todo ")) {
+                    newTask = new ToDo(input.substring(5));
+                }
+
+                // Add a Deadline Task
+                else if (input.startsWith("deadline ")) {
+                    String taskName = input.substring(9).split(" /by ")[0];
+                    String endDT = input.substring(9).split(" /by ")[1];
+                    newTask = new Deadline(taskName, endDT);
+                }
+
+                // Add an Event Task
+                else if (input.startsWith("event ")) {
+                    String taskName = input.substring(6).split(" /from ")[0];
+                    String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
+                    String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
+                    newTask = new Event(taskName, startDT, endDT);
+                }
+
+                // Add a normal Task
+                else {
+                    newTask = new Task(input);
+                }
+
+                WALLE.addToMemory(newTask);
                 System.out.printf("\n   added: %s\n\n", input);
             }
+
+            // Get next user input
             input = scanner.nextLine();
         }
 
