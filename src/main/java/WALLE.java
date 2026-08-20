@@ -53,6 +53,8 @@ public class WALLE {
             // Add a task (in general)
             else {
 
+                System.out.println("\n    Got it! I've added the task:");
+
                 // Current task in question
                 Task newTask;
 
@@ -82,7 +84,8 @@ public class WALLE {
                 }
 
                 WALLE.addToMemory(newTask);
-                System.out.printf("\n   added: %s\n\n", input);
+                System.out.printf("        %s\n", newTask);
+                System.out.printf("    Now you have %d task(s) on your list!\n\n", memPos);
             }
 
             // Get next user input
