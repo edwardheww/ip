@@ -1,10 +1,11 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class WALLE {
 
     // Memory of what user says
-    private static Task[] memory;
-    private static int memPos;
+    private static ArrayList<Task> memory;
+    private static int memCount;
 
     public static void main(String[] args) {
 
@@ -16,8 +17,8 @@ public class WALLE {
         System.out.println(greeting);
 
         // Initialise WALLE's memory & position pointer
-        WALLE.memory = new Task[100];
-        WALLE.memPos = 0;
+        WALLE.memory = new ArrayList<>();
+        WALLE.memCount = 0;
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
@@ -92,7 +93,7 @@ public class WALLE {
                     WALLE.addToMemory(newTask);
                     System.out.println("\n    Got it! I've added the task:");
                     System.out.printf("        %s\n", newTask);
-                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memPos);
+                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memCount);
                 }
             } catch (WALLEException e) {
                 System.out.println(e.getMessage());
@@ -113,10 +114,10 @@ public class WALLE {
     private static void addToMemory(Task newTask) {
 
         // Add input to current empty slot in memory that memPos is pointing at
-        memory[memPos] = newTask;
+        memory.add(newTask);
 
         // Increment memPos to point at next empty slot
-        memPos++;
+        memCount++;
 
     }
 
@@ -124,11 +125,11 @@ public class WALLE {
 
         // Print out user message history stored in memory
         System.out.println("\n  Here are the tasks in your list:"); // Used for newline
-        for (int pos = 0; pos < memPos; pos++) {
+        for (int pos = 0; pos < memCount; pos++) {
             System.out.println("   "
                     + (pos + 1)
                     + "."
-                    + memory[pos]);
+                    + memory.get(pos));
         }
         System.out.println(""); // Used for newline
 
@@ -137,18 +138,18 @@ public class WALLE {
     private static void mark(int pos) {
 
         // Mark specific task in memory as done
-        WALLE.memory[pos - 1].check();
+        WALLE.memory.get(pos - 1).check();
         System.out.printf("\n    Nice! I've marked this task as done:\n"
-                + "        %s\n\n", WALLE.memory[pos - 1]);
+                + "        %s\n\n", WALLE.memory.get(pos - 1));
 
     }
 
     private static void unmark(int pos) {
 
         // Mark specific task in memory as not done
-        WALLE.memory[pos - 1].uncheck();
+        WALLE.memory.get(pos - 1).uncheck();
         System.out.printf("\n    OK, I've marked this task as not done yet:\n"
-                + "        %s\n\n", WALLE.memory[pos - 1]);
+                + "        %s\n\n", WALLE.memory.get(pos - 1));
 
     }
 
