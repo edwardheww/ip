@@ -5,7 +5,6 @@ public class WALLE {
 
     // Memory of what user says
     private static ArrayList<Task> memory;
-    private static int memCount;
 
     public static void main(String[] args) {
 
@@ -16,9 +15,8 @@ public class WALLE {
                 + "———————————————————————\n";
         System.out.println(greeting);
 
-        // Initialise WALLE's memory & position pointer
+        // Initialise WALLE's memory
         WALLE.memory = new ArrayList<>();
-        WALLE.memCount = 0;
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
@@ -93,7 +91,7 @@ public class WALLE {
                     WALLE.addToMemory(newTask);
                     System.out.println("\n    Got it! I've added the task:");
                     System.out.printf("        %s\n", newTask);
-                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memCount);
+                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memory.size());
                 }
             } catch (WALLEException e) {
                 System.out.println(e.getMessage());
@@ -116,16 +114,13 @@ public class WALLE {
         // Add input to current empty slot in memory that memPos is pointing at
         memory.add(newTask);
 
-        // Increment memPos to point at next empty slot
-        memCount++;
-
     }
 
     private static void list() {
 
         // Print out user message history stored in memory
         System.out.println("\n  Here are the tasks in your list:"); // Used for newline
-        for (int pos = 0; pos < memCount; pos++) {
+        for (int pos = 0; pos < memory.size(); pos++) {
             System.out.println("   "
                     + (pos + 1)
                     + "."
@@ -150,6 +145,13 @@ public class WALLE {
         WALLE.memory.get(pos - 1).uncheck();
         System.out.printf("\n    OK, I've marked this task as not done yet:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
+
+    }
+
+    private static void delete(int pos) {
+
+        // Delete specific task in memory
+        WALLE.memory.remove(pos - 1);
 
     }
 
