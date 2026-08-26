@@ -189,18 +189,17 @@ public class WALLE {
 
     /*
      * Pull saved memory from past session into current context
-     * Format for ToDo: <type>|<checkmark>|<task>
-     * Format for Deadline: <type>|<checkmark>|<task>|<endDT>
-     * Format for Event: <type>|<checkmark>|<task>|<startDT>|<endDT>
+     * Format for ToDo: <type>:<checkmark>:<task>
+     * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
+     * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
      */
     private static void pullSavedMemory() throws FileNotFoundException {
 
-        File memFile = new File("../data/memory.txt");
+        File memFile = new File("src/main/data/memory.txt");
         Scanner memScanner = new Scanner(memFile);
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
-            String[] taskData = memScanner.nextLine().split("|");
-
+            String[] taskData = memScanner.nextLine().split(":");
             // Handling if saved task is a ToDo
             if (taskData[0].equals("T")) {
                 String task = taskData[2];
