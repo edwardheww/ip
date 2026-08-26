@@ -92,6 +92,13 @@ public class WALLE {
                         newTask = new Event(taskName, startDT, endDT);
                     }
 
+                    // Delete a Task
+                    else if (input.startsWith("delete")) {
+                        int deleteWhich = Integer.valueOf(input.substring(7));
+                        WALLE.delete(deleteWhich);
+                        continue;
+                    }
+
                     // Add a normal Task
                     else {
                         String taskName = input.split(" ")[0];
@@ -119,16 +126,16 @@ public class WALLE {
 
     }
 
+    // Add input to current empty slot in memory that memPos is pointing at
     private static void addToMemory(Task newTask) {
 
-        // Add input to current empty slot in memory that memPos is pointing at
         memory.add(newTask);
 
     }
 
+    // Print out user message history stored in memory
     private static void list() {
 
-        // Print out user message history stored in memory
         System.out.println("\n  Here are the tasks in your list:"); // Used for newline
         for (int pos = 0; pos < memory.size(); pos++) {
             System.out.println("   "
@@ -140,28 +147,33 @@ public class WALLE {
 
     }
 
+    // Mark specific task in memory as done
     private static void mark(int pos) {
 
-        // Mark specific task in memory as done
         WALLE.memory.get(pos - 1).check();
         System.out.printf("\n    Nice! I've marked this task as done:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
 
     }
 
+    // Mark specific task in memory as not done
     private static void unmark(int pos) {
 
-        // Mark specific task in memory as not done
         WALLE.memory.get(pos - 1).uncheck();
         System.out.printf("\n    OK, I've marked this task as not done yet:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
 
     }
 
+    // Delete specific task in memory
     private static void delete(int pos) {
 
-        // Delete specific task in memory
+        Task tmp = WALLE.memory.get(pos);
         WALLE.memory.remove(pos - 1);
+        System.out.printf("\n   OK, I've removed the following task:\n"
+                + "        %s\n"
+                + "    Now you have %d  task(s) on your list!\n\n",
+                tmp, memory.size());
 
     }
 
