@@ -8,6 +8,11 @@ public class Task {
         this.checked = false;
     }
 
+    public Task(String task, boolean checked) {
+        this.task = task;
+        this.checked = checked;
+    }
+
     public void check() {
         this.checked = true;
     }

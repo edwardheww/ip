@@ -4,6 +4,10 @@ public class ToDo extends Task {
         super(task);
     }
 
+    public ToDo(String task, boolean checked) {
+        super(task, checked);
+    }
+
     @Override
     public String toString() {
         return "[T]" + super.toString();
