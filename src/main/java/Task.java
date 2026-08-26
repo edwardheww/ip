@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
 
     private String task;
     private boolean checked;
@@ -28,6 +28,8 @@ public class Task {
     public String getTask() {
         return this.task;
     }
+
+    public abstract String getMemoryFormat();
 
     private String getCheckbox() {
         return this.checked ? "[X]" : "[ ]";
