@@ -225,6 +225,8 @@ public class WALLE {
             }
 
         }
+
+        memScanner.close();
     }
 
 }
