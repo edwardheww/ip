@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -17,6 +19,14 @@ public class WALLE {
 
         // Initialise WALLE's memory
         WALLE.memory = new ArrayList<>();
+
+        // Pull saved memory from previous session
+        try {
+            WALLE.pullSavedMemory();
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: Missing memory file :(");
+            return;
+        }
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
@@ -175,6 +185,46 @@ public class WALLE {
                 + "    Now you have %d  task(s) on your list!\n\n",
                 tmp, memory.size());
 
+    }
+
+    /*
+     * Pull saved memory from past session into current context
+     * Format for ToDo: <type>|<checkmark>|<task>
+     * Format for Deadline: <type>|<checkmark>|<task>|<endDT>
+     * Format for Event: <type>|<checkmark>|<task>|<startDT>|<endDT>
+     */
+    private static void pullSavedMemory() throws FileNotFoundException {
+
+        File memFile = new File("../data/memory.txt");
+        Scanner memScanner = new Scanner(memFile);
+
+        while (memScanner.hasNext()) { // Handles saved tasks one by one
+            String[] taskData = memScanner.nextLine().split("|");
+
+            // Handling if saved task is a ToDo
+            if (taskData[0].equals("T")) {
+                String task = taskData[2];
+                boolean checked = taskData[1].equals("X");
+                memory.add(new ToDo(task, checked));
+            }
+
+            // Handling if saved task is a Deadline
+            else if (taskData[0].equals("D")) {
+                String task = taskData[2];
+                boolean checked = taskData[1].equals("X");
+                String endDT = taskData[3];
+                memory.add(new Deadline(task, endDT, checked));
+            }
+
+            else if (taskData[0].equals("E")) {
+                String task = taskData[2];
+                boolean checked = taskData[1].equals("X");
+                String startDT = taskData[3];
+                String endDT = taskData[4];
+                memory.add(new Event(task, startDT, endDT, checked));
+            }
+
+        }
     }
 
 }
