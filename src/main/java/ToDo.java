@@ -8,6 +8,12 @@ public class ToDo extends Task {
         super(task, checked);
     }
 
+    public String getMemoryFormat() {
+        return "T:"
+                + (super.isChecked() ? "X" : " ") + ":"
+                + super.getTask();
+    }
+
     @Override
     public String toString() {
         return "[T]" + super.toString();
