@@ -25,6 +25,10 @@ public class Task {
         return this.checked;
     }
 
+    public String getTask() {
+        return this.task;
+    }
+
     private String getCheckbox() {
         return this.checked ? "[X]" : "[ ]";
     }
