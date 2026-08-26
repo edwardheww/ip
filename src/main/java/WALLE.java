@@ -6,6 +6,7 @@ public class WALLE {
     // Memory of what user says
     private static ArrayList<Task> memory;
 
+    // Main program, running of WALLE chatbot
     public static void main(String[] args) {
 
         // Greeting when started
@@ -23,6 +24,7 @@ public class WALLE {
 
     }
 
+    // Allow WALLE to continue running until user quits by saying 'bye'
     private static void interactUntilBye() {
 
         // Listen for first user input
