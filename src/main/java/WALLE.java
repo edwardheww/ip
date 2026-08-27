@@ -244,6 +244,7 @@ public class WALLE {
                     memory.add(new Event(task, startDT, endDT, checked));
                 }
             } catch (Exception e) {
+                memScanner.close();
                 throw new CorruptMemoryException();
             }
 
