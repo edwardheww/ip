@@ -25,9 +25,8 @@ public class WALLE {
         // Pull saved memory from previous session
         try {
             WALLE.pullSavedMemory();
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR: Missing memory file :(");
-            return;
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage() + " :(");
         }
 
         // Start process of echoing user input
@@ -202,9 +201,19 @@ public class WALLE {
      * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
      * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
      */
-    private static void pullSavedMemory() throws FileNotFoundException {
+    private static void pullSavedMemory() throws FileNotFoundException, IOException {
 
         File memFile = new File("src/main/data/memory.txt");
+
+        // Ensuring file exists by creating file if nonexistent
+        if (!memFile.exists()) {
+            File parent = memFile.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+            memFile.createNewFile();
+        }
+
         Scanner memScanner = new Scanner(memFile);
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
