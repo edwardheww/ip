@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WALLE {
 
@@ -128,6 +130,13 @@ public class WALLE {
             input = scanner.nextLine();
         }
 
+        // Retain current session updates across memory
+        try {
+            WALLE.updateMemoryFile();
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage() + " :(");
+        }
+
         // Print goodbye message
         System.out.println("\n  Bye bye! See you next time, I hope!\n");
 
@@ -226,6 +235,17 @@ public class WALLE {
         }
 
         memScanner.close();
+    }
+
+    // Update memory file with any changes to task list made during session
+    private static void updateMemoryFile() throws IOException {
+        FileWriter memFw = new FileWriter("src/main/data/memory.txt");
+        for (Task task : memory) {
+            String memInput = task.getMemoryFormat();
+            memFw.write(memInput + System.lineSeparator());
+        }
+
+        memFw.close();
     }
 
 }
