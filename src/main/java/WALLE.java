@@ -25,8 +25,10 @@ public class WALLE {
         // Pull saved memory from previous session
         try {
             WALLE.pullSavedMemory();
-        } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage() + " :(");
+        } catch (IOException e) {
+            System.out.println("\n    ERROR: " + e.getMessage() + " :(\n");
+        } catch (WALLEException e) {
+            System.out.println(e.getMessage());
         }
 
         // Start process of echoing user input
@@ -201,7 +203,7 @@ public class WALLE {
      * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
      * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
      */
-    private static void pullSavedMemory() throws FileNotFoundException, IOException {
+    private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
 
         File memFile = new File("src/main/data/memory.txt");
 
@@ -217,28 +219,32 @@ public class WALLE {
         Scanner memScanner = new Scanner(memFile);
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
-            String[] taskData = memScanner.nextLine().split(":");
-            // Handling if saved task is a ToDo
-            if (taskData[0].equals("T")) {
-                String task = taskData[2];
-                boolean checked = taskData[1].equals("X");
-                memory.add(new ToDo(task, checked));
-            }
+            try {
+                String[] taskData = memScanner.nextLine().split(":");
+                // Handling if saved task is a ToDo
+                if (taskData[0].equals("T")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    memory.add(new ToDo(task, checked));
+                }
 
-            // Handling if saved task is a Deadline
-            else if (taskData[0].equals("D")) {
-                String task = taskData[2];
-                boolean checked = taskData[1].equals("X");
-                String endDT = taskData[3];
-                memory.add(new Deadline(task, endDT, checked));
-            }
+                // Handling if saved task is a Deadline
+                else if (taskData[0].equals("D")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    String endDT = taskData[3];
+                    memory.add(new Deadline(task, endDT, checked));
+                }
 
-            else if (taskData[0].equals("E")) {
-                String task = taskData[2];
-                boolean checked = taskData[1].equals("X");
-                String startDT = taskData[3];
-                String endDT = taskData[4];
-                memory.add(new Event(task, startDT, endDT, checked));
+                else if (taskData[0].equals("E")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    String startDT = taskData[3];
+                    String endDT = taskData[4];
+                    memory.add(new Event(task, startDT, endDT, checked));
+                }
+            } catch (Exception e) {
+                throw new CorruptMemoryException();
             }
 
         }
