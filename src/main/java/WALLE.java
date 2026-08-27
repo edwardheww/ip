@@ -1,5 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WALLE {
 
@@ -18,6 +22,15 @@ public class WALLE {
 
         // Initialise WALLE's memory
         WALLE.memory = new ArrayList<>();
+
+        // Pull saved memory from previous session
+        try {
+            WALLE.pullSavedMemory();
+        } catch (IOException e) {
+            System.out.println("\n    ERROR: " + e.getMessage() + " :(\n");
+        } catch (WALLEException e) {
+            System.out.println(e.getMessage());
+        }
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
@@ -44,12 +57,14 @@ public class WALLE {
                 else if (input.matches("mark \\d")) {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     WALLE.mark(pos);
+                    updateMemoryFile();
                 }
 
                 // Unmark a task
                 else if (input.matches("unmark \\d")) {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     WALLE.unmark(pos);
+                    updateMemoryFile();
                 }
 
                 // Delete a task
@@ -57,6 +72,7 @@ public class WALLE {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     Task tmp = memory.get(pos - 1);
                     memory.remove(pos - 1);
+                    updateMemoryFile();
                     System.out.println("\n    Got it! I've removed the task:\n"
                             + "        " + tmp
                             + "\n    " + memory.size() + " task(s) left, let's go :D\n");
@@ -98,6 +114,7 @@ public class WALLE {
                     else if (input.startsWith("delete")) {
                         int deleteWhich = Integer.valueOf(input.substring(7));
                         WALLE.delete(deleteWhich);
+                        updateMemoryFile();
                         continue;
                     }
 
@@ -108,6 +125,7 @@ public class WALLE {
                     }
 
                     WALLE.addToMemory(newTask);
+                    updateMemoryFile();
                     System.out.println("\n    Got it! I've added the task:");
                     System.out.printf("        %s\n", newTask);
                     System.out.printf("    Now you have %d task(s) on your list!\n\n", memory.size());
@@ -176,6 +194,78 @@ public class WALLE {
                 + "        %s\n"
                 + "    Now you have %d  task(s) on your list!\n\n",
                 tmp, memory.size());
+
+    }
+
+    /*
+     * Pull saved memory from past session into current context
+     * Format for ToDo: <type>:<checkmark>:<task>
+     * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
+     * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
+     */
+    private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
+
+        File memFile = new File("src/main/data/memory.txt");
+
+        // Ensuring file exists by creating file if nonexistent
+        if (!memFile.exists()) {
+            File parent = memFile.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+            memFile.createNewFile();
+        }
+
+        Scanner memScanner = new Scanner(memFile);
+
+        while (memScanner.hasNext()) { // Handles saved tasks one by one
+            try {
+                String[] taskData = memScanner.nextLine().split(":");
+                // Handling if saved task is a ToDo
+                if (taskData[0].equals("T")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    memory.add(new ToDo(task, checked));
+                }
+
+                // Handling if saved task is a Deadline
+                else if (taskData[0].equals("D")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    String endDT = taskData[3];
+                    memory.add(new Deadline(task, endDT, checked));
+                }
+
+                else if (taskData[0].equals("E")) {
+                    String task = taskData[2];
+                    boolean checked = taskData[1].equals("X");
+                    String startDT = taskData[3];
+                    String endDT = taskData[4];
+                    memory.add(new Event(task, startDT, endDT, checked));
+                }
+            } catch (Exception e) {
+                memScanner.close();
+                throw new CorruptMemoryException();
+            }
+
+        }
+
+        memScanner.close();
+    }
+
+    // Update memory file with any changes to task list made during session
+    private static void updateMemoryFile() {
+
+        try {
+            FileWriter memFw = new FileWriter("src/main/data/memory.txt");
+            for (Task task : memory) {
+                String memInput = task.getMemoryFormat();
+                memFw.write(memInput + System.lineSeparator());
+            }
+            memFw.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage() + " :(");
+        }
 
     }
 

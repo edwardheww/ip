@@ -9,6 +9,20 @@ public class Event extends Task {
         this.endDT = endDT;
     }
 
+    public Event(String task, String startDT, String endDT, boolean checked) {
+        super(task, checked);
+        this.startDT = startDT;
+        this.endDT = endDT;
+    }
+
+    public String getMemoryFormat() {
+        return "E:"
+                + (super.isChecked() ? "X" : " ") + ":"
+                + super.getTask() + ":"
+                + this.startDT + ":"
+                + this.endDT;
+    }
+
     @Override
     public String toString() {
         return "[E]"
