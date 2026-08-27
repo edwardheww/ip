@@ -55,12 +55,14 @@ public class WALLE {
                 else if (input.matches("mark \\d")) {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     WALLE.mark(pos);
+                    updateMemoryFile();
                 }
 
                 // Unmark a task
                 else if (input.matches("unmark \\d")) {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     WALLE.unmark(pos);
+                    updateMemoryFile();
                 }
 
                 // Delete a task
@@ -68,6 +70,7 @@ public class WALLE {
                     int pos = Integer.valueOf(input.split(" ")[1]);
                     Task tmp = memory.get(pos - 1);
                     memory.remove(pos - 1);
+                    updateMemoryFile();
                     System.out.println("\n    Got it! I've removed the task:\n"
                             + "        " + tmp
                             + "\n    " + memory.size() + " task(s) left, let's go :D\n");
@@ -109,6 +112,7 @@ public class WALLE {
                     else if (input.startsWith("delete")) {
                         int deleteWhich = Integer.valueOf(input.substring(7));
                         WALLE.delete(deleteWhich);
+                        updateMemoryFile();
                         continue;
                     }
 
@@ -119,6 +123,7 @@ public class WALLE {
                     }
 
                     WALLE.addToMemory(newTask);
+                    updateMemoryFile();
                     System.out.println("\n    Got it! I've added the task:");
                     System.out.printf("        %s\n", newTask);
                     System.out.printf("    Now you have %d task(s) on your list!\n\n", memory.size());
@@ -129,13 +134,6 @@ public class WALLE {
 
             // Get next user input
             input = scanner.nextLine();
-        }
-
-        // Retain current session updates across memory
-        try {
-            WALLE.updateMemoryFile();
-        } catch (IOException e) {
-            System.out.println("ERROR: " + e.getMessage() + " :(");
         }
 
         // Print goodbye message
@@ -254,14 +252,19 @@ public class WALLE {
     }
 
     // Update memory file with any changes to task list made during session
-    private static void updateMemoryFile() throws IOException {
-        FileWriter memFw = new FileWriter("src/main/data/memory.txt");
-        for (Task task : memory) {
-            String memInput = task.getMemoryFormat();
-            memFw.write(memInput + System.lineSeparator());
+    private static void updateMemoryFile() {
+
+        try {
+            FileWriter memFw = new FileWriter("src/main/data/memory.txt");
+            for (Task task : memory) {
+                String memInput = task.getMemoryFormat();
+                memFw.write(memInput + System.lineSeparator());
+            }
+            memFw.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage() + " :(");
         }
 
-        memFw.close();
     }
 
 }
