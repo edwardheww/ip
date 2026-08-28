@@ -18,10 +18,10 @@ public class Event extends Task {
     }
 
     public String getMemoryFormat() {
-        return "E:"
-                + (super.isChecked() ? "X" : " ") + ":"
-                + super.getTask() + ":"
-                + this.startDT + ":"
+        return "E;"
+                + (super.isChecked() ? "X" : " ") + ";"
+                + super.getTask() + ";"
+                + this.startDT + ";"
                 + this.endDT;
     }
 

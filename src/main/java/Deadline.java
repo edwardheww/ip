@@ -15,9 +15,9 @@ public class Deadline extends Task {
     }
 
     public String getMemoryFormat() {
-        return "D:"
-                + (super.isChecked() ? "X" : " ") + ":"
-                + super.getTask() + ":"
+        return "D;"
+                + (super.isChecked() ? "X" : " ") + ";"
+                + super.getTask() + ";"
                 + this.endDT;
     }
 

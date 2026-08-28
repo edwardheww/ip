@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -215,9 +214,9 @@ public class WALLE {
 
     /*
      * Pull saved memory from past session into current context
-     * Format for ToDo: <type>:<checkmark>:<task>
-     * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
-     * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
+     * Format for ToDo: <type>;<checkmark>;<task>
+     * Format for Deadline: <type>;<checkmark>;<task>;<endDT>
+     * Format for Event: <type>;<checkmark>;<task>;<startDT>;<endDT>
      */
     private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
 
@@ -236,7 +235,7 @@ public class WALLE {
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
             try {
-                String[] taskData = memScanner.nextLine().split(":");
+                String[] taskData = memScanner.nextLine().split(";");
                 // Handling if saved task is a ToDo
                 if (taskData[0].equals("T")) {
                     String task = taskData[2];
