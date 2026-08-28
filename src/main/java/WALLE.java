@@ -98,6 +98,13 @@ public class WALLE {
                     else if (input.startsWith("deadline")) {
                         String taskName = input.substring(9).split(" /by ")[0];
                         String endDT = input.substring(9).split(" /by ")[1];
+                        try {
+                            checkDtFormat(endDT);
+                        } catch (InvalidDtFormatException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        }
                         newTask = new Deadline(taskName, endDT);
                     }
 
@@ -106,6 +113,14 @@ public class WALLE {
                         String taskName = input.substring(6).split(" /from ")[0];
                         String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
                         String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
+                        try {
+                            checkDtFormat(endDT);
+                            checkDtFormat(startDT);
+                        } catch (InvalidDtFormatException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        }
                         newTask = new Event(taskName, startDT, endDT);
                     }
 
@@ -267,5 +282,19 @@ public class WALLE {
         }
 
     }
+
+    // Check if user DT matches specified format: yyyy-MM-dd HHmm
+    private static void checkDtFormat(String userDt) throws InvalidDtFormatException {
+        if (!userDt.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
+            throw new InvalidDtFormatException();
+        }
+    }
+
+    /*
+     * // Convert user's datetime input format to LocalDateTime
+     * private static LocalDateTime formatUserDt(String userDt) {
+     * 
+     * }
+     */
 
 }
