@@ -296,6 +296,8 @@ public class WALLE {
             throw new InvalidDtFormatException();
         } else {
             int year = Integer.valueOf(userDt.split("-")[0]);
+            if (year < 1)
+                throw new DateTimeException("ERROR :( Year cannot be 0");
             int month = Integer.valueOf(userDt.split("-")[1]);
             if (month < 1 || month > 12)
                 throw new DateTimeException("ERROR :( Month must be within 1-12");
