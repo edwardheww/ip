@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Event extends Task {
 
@@ -29,8 +30,8 @@ public class Event extends Task {
     public String toString() {
         return "[E]"
                 + super.toString()
-                + " (from: " + startDT
-                + " to: " + endDT
+                + " (from: " + this.startDT.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
+                + " to: " + this.endDT.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
                 + ")";
     }
 
