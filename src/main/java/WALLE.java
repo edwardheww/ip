@@ -2,7 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -100,8 +102,12 @@ public class WALLE {
                         String taskName = input.substring(9).split(" /by ")[0];
                         String endDT = input.substring(9).split(" /by ")[1];
                         try {
-                            checkDtFormat(endDT);
+                            checkDtValidity(endDT);
                         } catch (InvalidDtFormatException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        } catch (DateTimeException e) {
                             System.out.println(e.getMessage());
                             input = scanner.nextLine();
                             continue;
@@ -115,8 +121,8 @@ public class WALLE {
                         String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
                         String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
                         try {
-                            checkDtFormat(endDT);
-                            checkDtFormat(startDT);
+                            checkDtValidity(endDT);
+                            checkDtValidity(startDT);
                         } catch (InvalidDtFormatException e) {
                             System.out.println(e.getMessage());
                             input = scanner.nextLine();
@@ -285,9 +291,23 @@ public class WALLE {
     }
 
     // Check if user DT matches specified format: yyyy-MM-dd HHmm
-    private static void checkDtFormat(String userDt) throws InvalidDtFormatException {
+    private static void checkDtValidity(String userDt) throws InvalidDtFormatException, DateTimeException {
         if (!userDt.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
             throw new InvalidDtFormatException();
+        } else {
+            int year = Integer.valueOf(userDt.split("-")[0]);
+            int month = Integer.valueOf(userDt.split("-")[1]);
+            if (month < 1 || month > 12)
+                throw new DateTimeException("ERROR :( Month must be within 1-12");
+            int day = Integer.valueOf(userDt.split(" ")[0].split("-")[2]);
+            if (day < 1 || day > Month.of(month).length(year % 4 == 0))
+                throw new DateTimeException("ERROR :( Month in question doesn't have this day");
+            int hour = Integer.valueOf(userDt.split(" ")[1]) / 100;
+            if (hour > 23)
+                throw new DateTimeException("ERROR :( This hour doesn't exist on any clock???");
+            int minute = Integer.valueOf(userDt.split(" ")[1]) % 100;
+            if (minute > 59)
+                throw new DateTimeException("ERROR :( This minute doesn't exist on any clock???");
         }
     }
 
