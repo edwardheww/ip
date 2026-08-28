@@ -107,7 +107,7 @@ public class WALLE {
                             input = scanner.nextLine();
                             continue;
                         }
-                        newTask = new Deadline(taskName, endDT);
+                        newTask = new Deadline(taskName, convertUserDt(endDT));
                     }
 
                     // Add an Event Task
@@ -123,7 +123,7 @@ public class WALLE {
                             input = scanner.nextLine();
                             continue;
                         }
-                        newTask = new Event(taskName, startDT, endDT);
+                        newTask = new Event(taskName, convertUserDt(startDT), convertUserDt(endDT));
                     }
 
                     // Delete a Task
@@ -249,7 +249,7 @@ public class WALLE {
                     String task = taskData[2];
                     boolean checked = taskData[1].equals("X");
                     String endDT = taskData[3];
-                    memory.add(new Deadline(task, endDT, checked));
+                    memory.add(new Deadline(task, LocalDateTime.parse(endDT), checked));
                 }
 
                 else if (taskData[0].equals("E")) {
@@ -257,7 +257,7 @@ public class WALLE {
                     boolean checked = taskData[1].equals("X");
                     String startDT = taskData[3];
                     String endDT = taskData[4];
-                    memory.add(new Event(task, startDT, endDT, checked));
+                    memory.add(new Event(task, LocalDateTime.parse(startDT), LocalDateTime.parse(endDT), checked));
                 }
             } catch (Exception e) {
                 memScanner.close();
