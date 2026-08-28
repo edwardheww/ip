@@ -1,9 +1,13 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+import java.util.ArrayList;
 
 public class WALLE {
 
@@ -99,7 +103,18 @@ public class WALLE {
                     else if (input.startsWith("deadline")) {
                         String taskName = input.substring(9).split(" /by ")[0];
                         String endDT = input.substring(9).split(" /by ")[1];
-                        newTask = new Deadline(taskName, endDT);
+                        try {
+                            checkDtValidity(endDT);
+                        } catch (InvalidDtFormatException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        } catch (DateTimeException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        }
+                        newTask = new Deadline(taskName, convertUserDt(endDT));
                     }
 
                     // Add an Event Task
@@ -107,7 +122,15 @@ public class WALLE {
                         String taskName = input.substring(6).split(" /from ")[0];
                         String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
                         String endDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
-                        newTask = new Event(taskName, startDT, endDT);
+                        try {
+                            checkDtValidity(endDT);
+                            checkDtValidity(startDT);
+                        } catch (InvalidDtFormatException e) {
+                            System.out.println(e.getMessage());
+                            input = scanner.nextLine();
+                            continue;
+                        }
+                        newTask = new Event(taskName, convertUserDt(startDT), convertUserDt(endDT));
                     }
 
                     // Delete a Task
@@ -199,9 +222,9 @@ public class WALLE {
 
     /*
      * Pull saved memory from past session into current context
-     * Format for ToDo: <type>:<checkmark>:<task>
-     * Format for Deadline: <type>:<checkmark>:<task>:<endDT>
-     * Format for Event: <type>:<checkmark>:<task>:<startDT>:<endDT>
+     * Format for ToDo: <type>;<checkmark>;<task>
+     * Format for Deadline: <type>;<checkmark>;<task>;<endDT>
+     * Format for Event: <type>;<checkmark>;<task>;<startDT>;<endDT>
      */
     private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
 
@@ -220,7 +243,7 @@ public class WALLE {
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
             try {
-                String[] taskData = memScanner.nextLine().split(":");
+                String[] taskData = memScanner.nextLine().split(";");
                 // Handling if saved task is a ToDo
                 if (taskData[0].equals("T")) {
                     String task = taskData[2];
@@ -233,7 +256,7 @@ public class WALLE {
                     String task = taskData[2];
                     boolean checked = taskData[1].equals("X");
                     String endDT = taskData[3];
-                    memory.add(new Deadline(task, endDT, checked));
+                    memory.add(new Deadline(task, LocalDateTime.parse(endDT), checked));
                 }
 
                 else if (taskData[0].equals("E")) {
@@ -241,7 +264,7 @@ public class WALLE {
                     boolean checked = taskData[1].equals("X");
                     String startDT = taskData[3];
                     String endDT = taskData[4];
-                    memory.add(new Event(task, startDT, endDT, checked));
+                    memory.add(new Event(task, LocalDateTime.parse(startDT), LocalDateTime.parse(endDT), checked));
                 }
             } catch (Exception e) {
                 memScanner.close();
@@ -267,6 +290,35 @@ public class WALLE {
             System.out.println("ERROR: " + e.getMessage() + " :(");
         }
 
+    }
+
+    // Check if user DT matches specified format: yyyy-MM-dd HHmm
+    private static void checkDtValidity(String userDt) throws InvalidDtFormatException, DateTimeException {
+        if (!userDt.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
+            throw new InvalidDtFormatException();
+        } else {
+            int year = Integer.valueOf(userDt.split("-")[0]);
+            if (year < 1)
+                throw new DateTimeException("ERROR :( Year cannot be 0");
+            int month = Integer.valueOf(userDt.split("-")[1]);
+            if (month < 1 || month > 12)
+                throw new DateTimeException("ERROR :( Month must be within 1-12");
+            int day = Integer.valueOf(userDt.split(" ")[0].split("-")[2]);
+            if (day < 1 || day > Month.of(month).length(year % 4 == 0))
+                throw new DateTimeException("ERROR :( Month in question doesn't have this day");
+            int hour = Integer.valueOf(userDt.split(" ")[1]) / 100;
+            if (hour > 23)
+                throw new DateTimeException("ERROR :( This hour doesn't exist on any clock???");
+            int minute = Integer.valueOf(userDt.split(" ")[1]) % 100;
+            if (minute > 59)
+                throw new DateTimeException("ERROR :( This minute doesn't exist on any clock???");
+        }
+    }
+
+    // Convert user's datetime input format to LocalDateTime
+    private static LocalDateTime convertUserDt(String userDt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+        return LocalDateTime.parse(userDt, formatter);
     }
 
 }

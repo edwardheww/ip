@@ -9,8 +9,8 @@ public class ToDo extends Task {
     }
 
     public String getMemoryFormat() {
-        return "T:"
-                + (super.isChecked() ? "X" : " ") + ":"
+        return "T;"
+                + (super.isChecked() ? "X" : " ") + ";"
                 + super.getTask();
     }
 

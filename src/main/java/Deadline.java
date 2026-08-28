@@ -1,21 +1,24 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task {
 
-    private String endDT;
+    private LocalDateTime endDT;
 
-    public Deadline(String task, String endDate) {
+    public Deadline(String task, LocalDateTime endDate) {
         super(task);
         this.endDT = endDate;
     }
 
-    public Deadline(String task, String endDate, boolean checked) {
+    public Deadline(String task, LocalDateTime endDate, boolean checked) {
         super(task, checked);
         this.endDT = endDate;
     }
 
     public String getMemoryFormat() {
-        return "D:"
-                + (super.isChecked() ? "X" : " ") + ":"
-                + super.getTask() + ":"
+        return "D;"
+                + (super.isChecked() ? "X" : " ") + ";"
+                + super.getTask() + ";"
                 + this.endDT;
     }
 
@@ -23,7 +26,7 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]"
                 + super.toString()
-                + " (by: " + this.endDT + ")";
+                + " (by: " + this.endDT.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
     }
 
 }
