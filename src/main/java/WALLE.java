@@ -2,7 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -290,11 +292,10 @@ public class WALLE {
         }
     }
 
-    /*
-     * // Convert user's datetime input format to LocalDateTime
-     * private static LocalDateTime formatUserDt(String userDt) {
-     * 
-     * }
-     */
+    // Convert user's datetime input format to LocalDateTime
+    private static LocalDateTime convertUserDt(String userDt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+        return LocalDateTime.parse(userDt, formatter);
+    }
 
 }
