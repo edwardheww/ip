@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Ui {
 
     // Greets user
@@ -36,6 +38,18 @@ public class Ui {
         System.out.println("\n    Got it! I've added the task:");
         System.out.printf("        %s\n", newTask);
         System.out.printf("    Now you have %d task(s) on your list!\n\n", numTasks);
+    }
+
+    // Lists task for user
+    public void listTasks(ArrayList<Task> taskList) {
+        System.out.println("\n  Here are the tasks in your list:"); // Used for newline
+        for (int pos = 0; pos < taskList.size(); pos++) {
+            System.out.println("   "
+                    + (pos + 1)
+                    + "."
+                    + taskList.get(pos));
+        }
+        System.out.println(""); // Used for newline
     }
 
 }

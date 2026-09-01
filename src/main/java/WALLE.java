@@ -156,14 +156,7 @@ public class WALLE {
 
     // Print out user message history stored in memory
     private static void list() {
-        System.out.println("\n  Here are the tasks in your list:"); // Used for newline
-        for (int pos = 0; pos < memory.size(); pos++) {
-            System.out.println("   "
-                    + (pos + 1)
-                    + "."
-                    + memory.get(pos));
-        }
-        System.out.println(""); // Used for newline
+        WALLE.ui.listTasks(WALLE.memory);
     }
 
     // Mark specific task in memory as done
