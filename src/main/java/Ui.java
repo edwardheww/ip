@@ -18,4 +18,12 @@ public class Ui {
     public void printErrorMsg(WALLEException e) {
         System.out.println(e.getMessage());
     }
+
+    // Prints status message after task deletion
+    public void printPostDeletionUpdate(Task deletedTask, int tasksLeft) {
+        System.out.println("\n    Got it! I've removed the task:\n"
+                + "        " + deletedTask
+                + "\n    " + tasksLeft + " task(s) left, let's go :D\n");
+    }
+
 }

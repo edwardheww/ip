@@ -68,9 +68,7 @@ public class WALLE {
                     Task tmp = memory.get(pos - 1);
                     memory.remove(pos - 1);
                     updateMemoryFile();
-                    System.out.println("\n    Got it! I've removed the task:\n"
-                            + "        " + tmp
-                            + "\n    " + memory.size() + " task(s) left, let's go :D\n");
+                    WALLE.ui.printPostDeletionUpdate(tmp, memory.size());
                 }
 
                 // Error handling: proper task type, missing description
