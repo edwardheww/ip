@@ -19,11 +19,18 @@ public class Ui {
         System.out.println(e.getMessage());
     }
 
-    // Prints status message after task deletion
-    public void printPostDeletionUpdate(Task deletedTask, int tasksLeft) {
+    // Updates user after task deletion
+    public void printTaskDeletionUpdate(Task deletedTask, int tasksLeft) {
         System.out.println("\n    Got it! I've removed the task:\n"
                 + "        " + deletedTask
                 + "\n    " + tasksLeft + " task(s) left, let's go :D\n");
+    }
+
+    // Updates user after task addition
+    public void printTaskAdditionUpdate(Task newTask, int numTasks) {
+        System.out.println("\n    Got it! I've added the task:");
+        System.out.printf("        %s\n", newTask);
+        System.out.printf("    Now you have %d task(s) on your list!\n\n", numTasks);
     }
 
 }

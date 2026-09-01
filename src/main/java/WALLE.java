@@ -68,7 +68,7 @@ public class WALLE {
                     Task tmp = memory.get(pos - 1);
                     memory.remove(pos - 1);
                     updateMemoryFile();
-                    WALLE.ui.printPostDeletionUpdate(tmp, memory.size());
+                    WALLE.ui.printTaskDeletionUpdate(tmp, memory.size());
                 }
 
                 // Error handling: proper task type, missing description
@@ -138,9 +138,7 @@ public class WALLE {
 
                     WALLE.addToMemory(newTask);
                     updateMemoryFile();
-                    System.out.println("\n    Got it! I've added the task:");
-                    System.out.printf("        %s\n", newTask);
-                    System.out.printf("    Now you have %d task(s) on your list!\n\n", memory.size());
+                    WALLE.ui.printTaskAdditionUpdate(newTask, memory.size());
                 }
             } catch (WALLEException e) {
                 System.out.println(e.getMessage());
