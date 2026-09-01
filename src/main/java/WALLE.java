@@ -16,7 +16,6 @@ public class WALLE {
 
     // Main program, running of WALLE chatbot
     public static void main(String[] args) {
-
         // Greeting when started
         String greeting = "\n"
                 + "Hey! I'm WALLE.\n"
@@ -38,19 +37,16 @@ public class WALLE {
 
         // Start process of echoing user input
         WALLE.interactUntilBye();
-
     }
 
     // Allow WALLE to continue running until user quits by saying 'bye'
     private static void interactUntilBye() {
-
         // Listen for first user input
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
-
             try {
                 // List tasks
                 if (input.equals("list")) {
@@ -166,19 +162,15 @@ public class WALLE {
 
         // Close scanner
         scanner.close();
-
     }
 
     // Add input to current empty slot in memory that memPos is pointing at
     private static void addToMemory(Task newTask) {
-
         memory.add(newTask);
-
     }
 
     // Print out user message history stored in memory
     private static void list() {
-
         System.out.println("\n  Here are the tasks in your list:"); // Used for newline
         for (int pos = 0; pos < memory.size(); pos++) {
             System.out.println("   "
@@ -187,37 +179,30 @@ public class WALLE {
                     + memory.get(pos));
         }
         System.out.println(""); // Used for newline
-
     }
 
     // Mark specific task in memory as done
     private static void mark(int pos) {
-
         WALLE.memory.get(pos - 1).check();
         System.out.printf("\n    Nice! I've marked this task as done:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
-
     }
 
     // Mark specific task in memory as not done
     private static void unmark(int pos) {
-
         WALLE.memory.get(pos - 1).uncheck();
         System.out.printf("\n    OK, I've marked this task as not done yet:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
-
     }
 
     // Delete specific task in memory
     private static void delete(int pos) {
-
         Task tmp = WALLE.memory.get(pos);
         WALLE.memory.remove(pos - 1);
         System.out.printf("\n   OK, I've removed the following task:\n"
                 + "        %s\n"
                 + "    Now you have %d  task(s) on your list!\n\n",
                 tmp, memory.size());
-
     }
 
     /*
@@ -227,7 +212,6 @@ public class WALLE {
      * Format for Event: <type>;<checkmark>;<task>;<startDT>;<endDT>
      */
     private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
-
         File memFile = new File("src/main/data/memory.txt");
 
         // Ensuring file exists by creating file if nonexistent
@@ -270,7 +254,6 @@ public class WALLE {
                 memScanner.close();
                 throw new CorruptMemoryException();
             }
-
         }
 
         memScanner.close();
@@ -278,7 +261,6 @@ public class WALLE {
 
     // Update memory file with any changes to task list made during session
     private static void updateMemoryFile() {
-
         try {
             FileWriter memFw = new FileWriter("src/main/data/memory.txt");
             for (Task task : memory) {
@@ -289,7 +271,6 @@ public class WALLE {
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage() + " :(");
         }
-
     }
 
     // Check if user DT matches specified format: yyyy-MM-dd HHmm
