@@ -1,12 +1,17 @@
 public class Ui {
 
-    // Greets User
+    // Greets user
     public void greetUser() {
         String greeting = "\n"
                 + "Hey! I'm WALLE.\n"
                 + "What can I do for you?\n"
                 + "———————————————————————\n";
         System.out.println(greeting);
+    }
+
+    // Bids user farewell
+    public void bidFarewell() {
+        System.out.println("\n  Bye bye! See you next time, I hope!\n");
     }
 
     // Prints error message for non-WALLEException exceptions

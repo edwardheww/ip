@@ -141,7 +141,7 @@ public class WALLE {
                     WALLE.ui.printTaskAdditionUpdate(newTask, memory.size());
                 }
             } catch (WALLEException e) {
-                System.out.println(e.getMessage());
+                WALLE.ui.printErrorMsg(e);
             }
 
             // Get next user input
@@ -149,7 +149,7 @@ public class WALLE {
         }
 
         // Print goodbye message
-        System.out.println("\n  Bye bye! See you next time, I hope!\n");
+        WALLE.ui.bidFarewell();
 
         // Close scanner
         scanner.close();
