@@ -205,11 +205,19 @@ public class WALLE {
                 tmp, memory.size());
     }
 
-    /*
-     * Pull saved memory from past session into current context
-     * Format for ToDo: <type>;<checkmark>;<task>
-     * Format for Deadline: <type>;<checkmark>;<task>;<endDT>
-     * Format for Event: <type>;<checkmark>;<task>;<startDT>;<endDT>
+    /**
+     * Pulls saved memory from the previous session into the current session.
+     *
+     * <p>Expected line formats in the memory file:
+     * <ul>
+     *   <li>ToDo: {@code <type>;<checkmark>;<task>}</li>
+     *   <li>Deadline: {@code <type>;<checkmark>;<task>;<endDT>}</li>
+     *   <li>Event: {@code <type>;<checkmark>;<task>;<startDT>;<endDT>}</li>
+     * </ul>
+     *
+     * @throws FileNotFoundException if the memory file cannot be found.
+     * @throws IOException if the memory file cannot be created or read.
+     * @throws WALLEException if a line in the memory file is corrupted.
      */
     private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
         File memFile = new File("src/main/data/memory.txt");
