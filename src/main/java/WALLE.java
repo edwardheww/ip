@@ -26,6 +26,8 @@ public class WALLE {
         // Pull saved memory from previous session
         try {
             WALLE.pullSavedMemory();
+        } catch (WALLEException e) {
+            WALLE.ui.printErrorMsg(e);
         } catch (Exception e) {
             WALLE.ui.printErrorMsg(e);
         }
@@ -95,11 +97,11 @@ public class WALLE {
                         try {
                             checkDtValidity(endDT);
                         } catch (InvalidDtFormatException e) {
-                            System.out.println(e.getMessage());
+                            WALLE.ui.printErrorMsg(e);
                             input = scanner.nextLine();
                             continue;
                         } catch (DateTimeException e) {
-                            System.out.println(e.getMessage());
+                            WALLE.ui.printErrorMsg(e);
                             input = scanner.nextLine();
                             continue;
                         }
@@ -115,19 +117,11 @@ public class WALLE {
                             checkDtValidity(endDT);
                             checkDtValidity(startDT);
                         } catch (InvalidDtFormatException e) {
-                            System.out.println(e.getMessage());
+                            WALLE.ui.printErrorMsg(e);
                             input = scanner.nextLine();
                             continue;
                         }
                         newTask = new Event(taskName, convertUserDt(startDT), convertUserDt(endDT));
-                    }
-
-                    // Delete a Task
-                    else if (input.startsWith("delete")) {
-                        int deleteWhich = Integer.valueOf(input.substring(7));
-                        WALLE.delete(deleteWhich);
-                        updateMemoryFile();
-                        continue;
                     }
 
                     // Add a normal Task
@@ -184,16 +178,6 @@ public class WALLE {
         WALLE.memory.get(pos - 1).uncheck();
         System.out.printf("\n    OK, I've marked this task as not done yet:\n"
                 + "        %s\n\n", WALLE.memory.get(pos - 1));
-    }
-
-    // Delete specific task in memory
-    private static void delete(int pos) {
-        Task tmp = WALLE.memory.get(pos);
-        WALLE.memory.remove(pos - 1);
-        System.out.printf("\n   OK, I've removed the following task:\n"
-                + "        %s\n"
-                + "    Now you have %d  task(s) on your list!\n\n",
-                tmp, memory.size());
     }
 
     /**
@@ -269,7 +253,7 @@ public class WALLE {
             }
             memFw.close();
         } catch (IOException e) {
-            System.out.println("ERROR: " + e.getMessage() + " :(");
+            WALLE.ui.printErrorMsg(e);
         }
     }
 
