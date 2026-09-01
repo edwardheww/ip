@@ -6,8 +6,8 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class WALLE {
 
@@ -39,8 +39,7 @@ public class WALLE {
     // Allow WALLE to continue running until user quits by saying 'bye'
     private static void interactUntilBye() {
         // Listen for first user input
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input = WALLE.ui.readCommand();
 
         // While input is not 'bye', echo input back to user
         while (!input.equals("bye")) {
@@ -98,11 +97,11 @@ public class WALLE {
                             checkDtValidity(endDT);
                         } catch (InvalidDtFormatException e) {
                             WALLE.ui.printErrorMsg(e);
-                            input = scanner.nextLine();
+                            input = WALLE.ui.readCommand();
                             continue;
                         } catch (DateTimeException e) {
                             WALLE.ui.printErrorMsg(e);
-                            input = scanner.nextLine();
+                            input = WALLE.ui.readCommand();
                             continue;
                         }
                         newTask = new Deadline(taskName, convertUserDt(endDT));
@@ -118,7 +117,7 @@ public class WALLE {
                             checkDtValidity(startDT);
                         } catch (InvalidDtFormatException e) {
                             WALLE.ui.printErrorMsg(e);
-                            input = scanner.nextLine();
+                            input = WALLE.ui.readCommand();
                             continue;
                         }
                         newTask = new Event(taskName, convertUserDt(startDT), convertUserDt(endDT));
@@ -139,14 +138,14 @@ public class WALLE {
             }
 
             // Get next user input
-            input = scanner.nextLine();
+            input = WALLE.ui.readCommand();
         }
 
         // Print goodbye message
         WALLE.ui.bidFarewell();
 
-        // Close scanner
-        scanner.close();
+        // Close the Ui's input scanner
+        WALLE.ui.closeScanner();
     }
 
     // Add input to current empty slot in memory that memPos is pointing at
