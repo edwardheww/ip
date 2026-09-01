@@ -11,28 +11,23 @@ import java.util.ArrayList;
 
 public class WALLE {
 
-    // Memory of what user says
-    private static ArrayList<Task> memory;
+    private static ArrayList<Task> memory; // Memory of what user says
+    private static Ui ui; // Class handling user interactions
 
     // Main program, running of WALLE chatbot
     public static void main(String[] args) {
-        // Greeting when started
-        String greeting = "\n"
-                + "Hey! I'm WALLE.\n"
-                + "What can I do for you?\n"
-                + "———————————————————————\n";
-        System.out.println(greeting);
-
-        // Initialise WALLE's memory
+        // Initialise WALLE's fields
         WALLE.memory = new ArrayList<>();
+        WALLE.ui = new Ui();
+
+        // Greeting when started
+        WALLE.ui.greetUser();
 
         // Pull saved memory from previous session
         try {
             WALLE.pullSavedMemory();
-        } catch (IOException e) {
-            System.out.println("\n    ERROR: " + e.getMessage() + " :(\n");
-        } catch (WALLEException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            WALLE.ui.printErrorMsg(e);
         }
 
         // Start process of echoing user input
@@ -208,16 +203,17 @@ public class WALLE {
     /**
      * Pulls saved memory from the previous session into the current session.
      *
-     * <p>Expected line formats in the memory file:
+     * <p>
+     * Expected line formats in the memory file:
      * <ul>
-     *   <li>ToDo: {@code <type>;<checkmark>;<task>}</li>
-     *   <li>Deadline: {@code <type>;<checkmark>;<task>;<endDT>}</li>
-     *   <li>Event: {@code <type>;<checkmark>;<task>;<startDT>;<endDT>}</li>
+     * <li>ToDo: {@code <type>;<checkmark>;<task>}</li>
+     * <li>Deadline: {@code <type>;<checkmark>;<task>;<endDT>}</li>
+     * <li>Event: {@code <type>;<checkmark>;<task>;<startDT>;<endDT>}</li>
      * </ul>
      *
      * @throws FileNotFoundException if the memory file cannot be found.
-     * @throws IOException if the memory file cannot be created or read.
-     * @throws WALLEException if a line in the memory file is corrupted.
+     * @throws IOException           if the memory file cannot be created or read.
+     * @throws WALLEException        if a line in the memory file is corrupted.
      */
     private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
         File memFile = new File("src/main/data/memory.txt");
