@@ -168,8 +168,7 @@ public class WALLE {
     // Mark specific task in memory as not done
     private static void unmark(int pos) {
         WALLE.memory.get(pos - 1).uncheck();
-        System.out.printf("\n    OK, I've marked this task as not done yet:\n"
-                + "        %s\n\n", WALLE.memory.get(pos - 1));
+        WALLE.ui.printTaskUnmarkedUpdate(WALLE.memory.get(pos - 1));
     }
 
     /**

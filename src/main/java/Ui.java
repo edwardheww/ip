@@ -58,4 +58,10 @@ public class Ui {
                 + "        %s\n\n", markedTask);
     }
 
+    // Updates user after task unmarked
+    public void printTaskUnmarkedUpdate(Task unmarkedTask) {
+        System.out.printf("\n    OK, I've marked this task as not done yet:\n"
+                + "        %s\n\n", unmarkedTask);
+    }
+
 }
