@@ -52,4 +52,10 @@ public class Ui {
         System.out.println(""); // Used for newline
     }
 
+    // Updates user after task marked as done
+    public void printTaskMarkedUpdate(Task markedTask) {
+        System.out.printf("\n    Nice! I've marked this task as done:\n"
+                + "        %s\n\n", markedTask);
+    }
+
 }

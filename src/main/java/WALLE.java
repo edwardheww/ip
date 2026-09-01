@@ -162,8 +162,7 @@ public class WALLE {
     // Mark specific task in memory as done
     private static void mark(int pos) {
         WALLE.memory.get(pos - 1).check();
-        System.out.printf("\n    Nice! I've marked this task as done:\n"
-                + "        %s\n\n", WALLE.memory.get(pos - 1));
+        WALLE.ui.printTaskMarkedUpdate(WALLE.memory.get(pos - 1));
     }
 
     // Mark specific task in memory as not done
