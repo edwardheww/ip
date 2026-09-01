@@ -1,28 +1,28 @@
 public abstract class Task {
 
     private String task;
-    private boolean checked;
+    private boolean isDone;
 
     public Task(String task) {
         this.task = task;
-        this.checked = false;
+        this.isDone = false;
     }
 
-    public Task(String task, boolean checked) {
+    public Task(String task, boolean isDone) {
         this.task = task;
-        this.checked = checked;
+        this.isDone = isDone;
     }
 
     public void check() {
-        this.checked = true;
+        this.isDone = true;
     }
 
     public void uncheck() {
-        this.checked = false;
+        this.isDone = false;
     }
 
     public boolean isChecked() {
-        return this.checked;
+        return this.isDone;
     }
 
     public String getTask() {
@@ -32,7 +32,7 @@ public abstract class Task {
     public abstract String getMemoryFormat();
 
     private String getCheckbox() {
-        return this.checked ? "[X]" : "[ ]";
+        return this.isDone ? "[X]" : "[ ]";
     }
 
     @Override
