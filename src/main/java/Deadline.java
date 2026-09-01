@@ -5,9 +5,9 @@ public class Deadline extends Task {
 
     private LocalDateTime endDT;
 
-    public Deadline(String task, LocalDateTime endDate) {
+    public Deadline(String task, LocalDateTime endDT) {
         super(task);
-        this.endDT = endDate;
+        this.endDT = endDT;
     }
 
     public Deadline(String task, LocalDateTime endDate, boolean checked) {
