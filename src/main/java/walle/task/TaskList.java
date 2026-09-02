@@ -1,4 +1,9 @@
+package walle.task;
+
 import java.util.ArrayList;
+
+import walle.storage.Storage;
+import walle.ui.Ui;
 
 /**
  * Holds the list of tasks WALLE is tracking, and provides operations to

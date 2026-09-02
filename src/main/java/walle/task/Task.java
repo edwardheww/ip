@@ -1,3 +1,5 @@
+package walle.task;
+
 public abstract class Task {
 
     private String task;

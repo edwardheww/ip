@@ -1,3 +1,5 @@
+package walle.exception;
+
 public class InvalidTaskTypeException extends WALLEException {
 
     public InvalidTaskTypeException(String taskType) {

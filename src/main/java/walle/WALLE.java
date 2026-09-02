@@ -1,4 +1,14 @@
+package walle;
+
 import java.io.IOException;
+
+import walle.exception.WALLEException;
+import walle.parser.CommandType;
+import walle.parser.Parser;
+import walle.storage.Storage;
+import walle.task.Task;
+import walle.task.TaskList;
+import walle.ui.Ui;
 
 public class WALLE {
 

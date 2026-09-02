@@ -1,3 +1,5 @@
+package walle.exception;
+
 public class MissingDescException extends WALLEException {
 
     public MissingDescException(String taskType) {

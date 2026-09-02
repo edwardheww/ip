@@ -1,3 +1,5 @@
+package walle.exception;
+
 public class CorruptMemoryException extends WALLEException {
 
     public CorruptMemoryException() {

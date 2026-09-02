@@ -1,3 +1,5 @@
+package walle.parser;
+
 /**
  * The kinds of command WALLE recognises, as classified by {@link Parser}.
  */

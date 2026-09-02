@@ -1,3 +1,5 @@
+package walle.exception;
+
 public class InvalidDtFormatException extends WALLEException {
 
     public InvalidDtFormatException() {

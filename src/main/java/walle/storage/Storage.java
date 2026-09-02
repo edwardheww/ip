@@ -1,3 +1,5 @@
+package walle.storage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -5,6 +7,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import walle.exception.CorruptMemoryException;
+import walle.exception.WALLEException;
+import walle.task.Deadline;
+import walle.task.Event;
+import walle.task.Task;
+import walle.task.ToDo;
 
 /**
  * Handles reading tasks from, and writing tasks to, the memory file on disk.

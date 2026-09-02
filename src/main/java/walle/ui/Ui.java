@@ -1,5 +1,10 @@
+package walle.ui;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import walle.exception.WALLEException;
+import walle.task.Task;
 
 /**
  * Handles all interactions with the user: reading commands from standard
