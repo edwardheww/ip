@@ -73,14 +73,16 @@ public class TaskListTest {
     }
 
     @Test
-    public void constructor_existingTasks_wrapsGivenListDirectly() {
+    public void constructor_existingTasks_exposesThoseSameTasks() {
+        Task loadedTask = new ToDo("loaded task");
         ArrayList<Task> existingTasks = new ArrayList<>();
-        existingTasks.add(new ToDo("loaded task"));
+        existingTasks.add(loadedTask);
 
         TaskList taskList = new TaskList(existingTasks);
 
         assertEquals(1, taskList.size());
-        assertSame(existingTasks, taskList.getTasks());
+        assertSame(loadedTask, taskList.get(1));
+        assertSame(loadedTask, taskList.getTasks().get(0));
     }
 
 }

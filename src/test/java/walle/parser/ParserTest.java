@@ -3,8 +3,9 @@ package walle.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,20 +43,27 @@ public class ParserTest {
         assertThrows(InvalidTaskTypeException.class, () -> parser.parseCommandType("foobar"));
     }
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    /**
+     * Builds the expected "Month day year" display text independently of
+     * {@link walle.task.Deadline}/{@link walle.task.Event}'s own formatter, so this
+     * test doesn't just echo back whatever pattern the production code happens to use.
+     */
+    private static String expectedDateText(int year, int month, int day) {
+        String monthAbbrev = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.getDefault());
+        return String.format("%s %02d %d", monthAbbrev, day, year);
+    }
 
     @Test
     public void parseTask_validDeadline_returnsCorrectlyFormattedTask() {
         Task task = parser.parseTask(CommandType.DEADLINE, "deadline submit report /by 2026-09-10 2359");
-        String expectedDate = LocalDateTime.of(2026, 9, 10, 23, 59).format(DATE_FORMAT);
-        assertEquals("[D][ ] submit report (by: " + expectedDate + ")", task.toString());
+        assertEquals("[D][ ] submit report (by: " + expectedDateText(2026, 9, 10) + ")", task.toString());
     }
 
     @Test
     public void parseTask_validEvent_returnsCorrectlyFormattedTask() {
         Task task = parser.parseTask(CommandType.EVENT, "event team meeting /from 2026-09-05 1400 /to 2026-09-05 1500");
-        String expectedStart = LocalDateTime.of(2026, 9, 5, 14, 0).format(DATE_FORMAT);
-        String expectedEnd = LocalDateTime.of(2026, 9, 5, 15, 0).format(DATE_FORMAT);
+        String expectedStart = expectedDateText(2026, 9, 5);
+        String expectedEnd = expectedDateText(2026, 9, 5);
         assertEquals("[E][ ] team meeting (from: " + expectedStart + " to: " + expectedEnd + ")", task.toString());
     }
 
