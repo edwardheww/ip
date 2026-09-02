@@ -13,7 +13,8 @@ public class MissingArgException extends WALLEException {
      * @param argName  the name of the missing argument marker, e.g. {@code "/by"}.
      */
     public MissingArgException(String taskType, String argName) {
-        super("\n   ERROR :( Your " + taskType + " is missing the " + argName + " argument. That's not allowed!\n");
+        super("\n   ERROR :( Your " + taskType + " is missing the " + argName
+                + " argument. That's not allowed!\n");
     }
 
 }

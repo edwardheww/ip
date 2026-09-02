@@ -34,8 +34,10 @@ public class ParserTest {
     @Test
     public void parseCommandType_todoDeadlineEventCommands_returnCorrespondingTypes() {
         assertEquals(CommandType.TODO, parser.parseCommandType("todo read book"));
-        assertEquals(CommandType.DEADLINE, parser.parseCommandType("deadline submit report /by 2026-09-10 2359"));
-        assertEquals(CommandType.EVENT, parser.parseCommandType("event meeting /from 2026-09-05 1400 /to 2026-09-05 1500"));
+        assertEquals(CommandType.DEADLINE,
+                parser.parseCommandType("deadline submit report /by 2026-09-10 2359"));
+        assertEquals(CommandType.EVENT,
+                parser.parseCommandType("event meeting /from 2026-09-05 1400 /to 2026-09-05 1500"));
     }
 
     @Test
@@ -61,10 +63,12 @@ public class ParserTest {
 
     @Test
     public void parseTask_validEvent_returnsCorrectlyFormattedTask() {
-        Task task = parser.parseTask(CommandType.EVENT, "event team meeting /from 2026-09-05 1400 /to 2026-09-05 1500");
+        Task task = parser.parseTask(CommandType.EVENT,
+                "event team meeting /from 2026-09-05 1400 /to 2026-09-05 1500");
         String expectedStart = expectedDateText(2026, 9, 5);
         String expectedEnd = expectedDateText(2026, 9, 5);
-        assertEquals("[E][ ] team meeting (from: " + expectedStart + " to: " + expectedEnd + ")", task.toString());
+        assertEquals("[E][ ] team meeting (from: " + expectedStart + " to: " + expectedEnd + ")",
+                task.toString());
     }
 
     @Test
@@ -76,7 +80,8 @@ public class ParserTest {
 
     @Test
     public void parseTask_deadlineMissingByArgument_exceptionThrown() {
-        assertThrows(MissingArgException.class, () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report"));
+        assertThrows(MissingArgException.class,
+                () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report"));
     }
 
     @Test

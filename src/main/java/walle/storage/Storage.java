@@ -39,8 +39,8 @@ public class Storage {
      * Expected line formats in the memory file:
      * <ul>
      * <li>ToDo: {@code <type>;<checkmark>;<task>}</li>
-     * <li>Deadline: {@code <type>;<checkmark>;<task>;<endDT>}</li>
-     * <li>Event: {@code <type>;<checkmark>;<task>;<startDT>;<endDT>}</li>
+     * <li>Deadline: {@code <type>;<checkmark>;<task>;<endDt>}</li>
+     * <li>Event: {@code <type>;<checkmark>;<task>;<startDt>;<endDt>}</li>
      * </ul>
      *
      * @return the list of tasks read from the memory file.
@@ -69,24 +69,25 @@ public class Storage {
                 // Handling if saved task is a ToDo
                 if (taskData[0].equals("T")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    memory.add(new ToDo(task, checked));
+                    boolean isChecked = taskData[1].equals("X");
+                    memory.add(new ToDo(task, isChecked));
                 }
 
                 // Handling if saved task is a Deadline
                 else if (taskData[0].equals("D")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    String endDT = taskData[3];
-                    memory.add(new Deadline(task, LocalDateTime.parse(endDT), checked));
+                    boolean isChecked = taskData[1].equals("X");
+                    String endDt = taskData[3];
+                    memory.add(new Deadline(task, LocalDateTime.parse(endDt), isChecked));
                 }
 
                 else if (taskData[0].equals("E")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    String startDT = taskData[3];
-                    String endDT = taskData[4];
-                    memory.add(new Event(task, LocalDateTime.parse(startDT), LocalDateTime.parse(endDT), checked));
+                    boolean isChecked = taskData[1].equals("X");
+                    String startDt = taskData[3];
+                    String endDt = taskData[4];
+                    memory.add(new Event(task, LocalDateTime.parse(startDt),
+                            LocalDateTime.parse(endDt), isChecked));
                 }
             } catch (Exception e) {
                 memScanner.close();
