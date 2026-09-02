@@ -41,6 +41,11 @@ public class ParserTest {
     }
 
     @Test
+    public void parseCommandType_findCommand_returnsFindType() {
+        assertEquals(CommandType.FIND, parser.parseCommandType("find book"));
+    }
+
+    @Test
     public void parseCommandType_unknownCommand_exceptionThrown() {
         assertThrows(InvalidTaskTypeException.class, () -> parser.parseCommandType("foobar"));
     }
@@ -99,6 +104,16 @@ public class ParserTest {
     public void parseTask_invalidDatetimeFormat_exceptionThrown() {
         assertThrows(InvalidDtFormatException.class,
                 () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report /by not-a-date"));
+    }
+
+    @Test
+    public void parseKeyword_validInput_returnsKeyword() {
+        assertEquals("book", parser.parseKeyword("find book"));
+    }
+
+    @Test
+    public void parseKeyword_missingKeyword_exceptionThrown() {
+        assertThrows(MissingDescException.class, () -> parser.parseKeyword("find"));
     }
 
 }

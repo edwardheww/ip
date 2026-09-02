@@ -97,7 +97,21 @@ public class Ui {
      * @param taskList the list of tasks to display.
      */
     public void listTasks(ArrayList<Task> taskList) {
-        System.out.println("\n  Here are the tasks in your list:"); // Used for newline
+        printNumberedTasks("Here are the tasks in your list:", taskList);
+    }
+
+    /**
+     * Prints the tasks that matched a {@code find} search, numbered from 1.
+     *
+     * @param matchingTasks the matching tasks to display.
+     */
+    public void printMatchingTasks(ArrayList<Task> matchingTasks) {
+        printNumberedTasks("Here are the matching tasks in your list:", matchingTasks);
+    }
+
+    // Print a header followed by the given tasks, numbered from 1
+    private void printNumberedTasks(String header, ArrayList<Task> taskList) {
+        System.out.println("\n  " + header); // Used for newline
         for (int pos = 0; pos < taskList.size(); pos++) {
             System.out.println("   "
                     + (pos + 1)

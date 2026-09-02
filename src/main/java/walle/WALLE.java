@@ -93,6 +93,12 @@ public class WALLE {
                     WALLE.ui.printTaskAdditionUpdate(newTask, WALLE.tasks.size());
                     break;
                 }
+
+                case FIND: {
+                    String keyword = WALLE.parser.parseKeyword(input);
+                    WALLE.ui.printMatchingTasks(WALLE.tasks.find(keyword));
+                    break;
+                }
                 }
             } catch (WALLEException e) {
                 WALLE.ui.printErrorMsg(e);

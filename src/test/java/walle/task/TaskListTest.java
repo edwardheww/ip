@@ -73,6 +73,33 @@ public class TaskListTest {
     }
 
     @Test
+    public void find_keywordMatchesTwoOfThreeTasks_returnsMatchesInOriginalOrder() {
+        TaskList taskList = new TaskList();
+        Task readBook = new ToDo("read book");
+        Task buyGroceries = new ToDo("buy groceries");
+        Task returnBook = new ToDo("return book");
+        taskList.add(readBook);
+        taskList.add(buyGroceries);
+        taskList.add(returnBook);
+
+        ArrayList<Task> matches = taskList.find("book");
+
+        assertEquals(2, matches.size());
+        assertSame(readBook, matches.get(0));
+        assertSame(returnBook, matches.get(1));
+    }
+
+    @Test
+    public void find_noMatchingTasks_returnsEmptyList() {
+        TaskList taskList = new TaskList();
+        taskList.add(new ToDo("buy groceries"));
+
+        ArrayList<Task> matches = taskList.find("book");
+
+        assertEquals(0, matches.size());
+    }
+
+    @Test
     public void constructor_existingTasks_exposesThoseSameTasks() {
         Task loadedTask = new ToDo("loaded task");
         ArrayList<Task> existingTasks = new ArrayList<>();

@@ -43,6 +43,8 @@ public class Parser {
             return CommandType.DEADLINE;
         } else if (input.strip().equals("event") || input.startsWith("event")) {
             return CommandType.EVENT;
+        } else if (input.strip().equals("find") || input.startsWith("find ")) {
+            return CommandType.FIND;
         } else {
             throw new InvalidTaskTypeException(input.split(" ")[0]);
         }
@@ -56,6 +58,20 @@ public class Parser {
      */
     public int parseIndex(String input) {
         return Integer.valueOf(input.split(" ")[1]);
+    }
+
+    /**
+     * Extracts the search keyword from a {@code find} command.
+     *
+     * @param input the raw command string, e.g. {@code "find book"}.
+     * @return the keyword to search task descriptions for.
+     * @throws MissingDescException if no keyword is given.
+     */
+    public String parseKeyword(String input) throws MissingDescException {
+        if (input.strip().equals("find")) {
+            throw new MissingDescException("find");
+        }
+        return input.substring(5);
     }
 
     /**
