@@ -28,13 +28,13 @@ public class Event extends Task {
      * Creates an Event with the given description, time range, and completion
      * status, e.g. when restoring a task previously loaded from storage.
      *
-     * @param task    the task's description.
-     * @param startDt the date/time the event starts.
-     * @param endDt   the date/time the event ends.
-     * @param checked whether the task is already marked done.
+     * @param task      the task's description.
+     * @param startDt   the date/time the event starts.
+     * @param endDt     the date/time the event ends.
+     * @param isChecked whether the task is already marked done.
      */
-    public Event(String task, LocalDateTime startDt, LocalDateTime endDt, boolean checked) {
-        super(task, checked);
+    public Event(String task, LocalDateTime startDt, LocalDateTime endDt, boolean isChecked) {
+        super(task, isChecked);
         this.startDt = startDt;
         this.endDt = endDt;
     }

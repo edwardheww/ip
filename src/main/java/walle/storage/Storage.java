@@ -69,25 +69,25 @@ public class Storage {
                 // Handling if saved task is a ToDo
                 if (taskData[0].equals("T")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    memory.add(new ToDo(task, checked));
+                    boolean isChecked = taskData[1].equals("X");
+                    memory.add(new ToDo(task, isChecked));
                 }
 
                 // Handling if saved task is a Deadline
                 else if (taskData[0].equals("D")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
+                    boolean isChecked = taskData[1].equals("X");
                     String endDt = taskData[3];
-                    memory.add(new Deadline(task, LocalDateTime.parse(endDt), checked));
+                    memory.add(new Deadline(task, LocalDateTime.parse(endDt), isChecked));
                 }
 
                 else if (taskData[0].equals("E")) {
                     String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
+                    boolean isChecked = taskData[1].equals("X");
                     String startDt = taskData[3];
                     String endDt = taskData[4];
                     memory.add(new Event(task, LocalDateTime.parse(startDt),
-                            LocalDateTime.parse(endDt), checked));
+                            LocalDateTime.parse(endDt), isChecked));
                 }
             } catch (Exception e) {
                 memScanner.close();

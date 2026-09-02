@@ -25,12 +25,12 @@ public class Deadline extends Task {
      * Creates a Deadline with the given description, due date/time, and completion
      * status, e.g. when restoring a task previously loaded from storage.
      *
-     * @param task    the task's description.
-     * @param endDt   the date/time the task is due by.
-     * @param checked whether the task is already marked done.
+     * @param task      the task's description.
+     * @param endDt     the date/time the task is due by.
+     * @param isChecked whether the task is already marked done.
      */
-    public Deadline(String task, LocalDateTime endDt, boolean checked) {
-        super(task, checked);
+    public Deadline(String task, LocalDateTime endDt, boolean isChecked) {
+        super(task, isChecked);
         this.endDt = endDt;
     }
 

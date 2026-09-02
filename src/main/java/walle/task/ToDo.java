@@ -18,11 +18,11 @@ public class ToDo extends Task {
      * Creates a ToDo with the given description and completion status, e.g.
      * when restoring a task previously loaded from storage.
      *
-     * @param task    the task's description.
-     * @param checked whether the task is already marked done.
+     * @param task      the task's description.
+     * @param isChecked whether the task is already marked done.
      */
-    public ToDo(String task, boolean checked) {
-        super(task, checked);
+    public ToDo(String task, boolean isChecked) {
+        super(task, isChecked);
     }
 
     /**
