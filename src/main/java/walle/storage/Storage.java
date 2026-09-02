@@ -86,7 +86,8 @@ public class Storage {
                     boolean checked = taskData[1].equals("X");
                     String startDT = taskData[3];
                     String endDT = taskData[4];
-                    memory.add(new Event(task, LocalDateTime.parse(startDT), LocalDateTime.parse(endDT), checked));
+                    memory.add(new Event(task, LocalDateTime.parse(startDT),
+                            LocalDateTime.parse(endDT), checked));
                 }
             } catch (Exception e) {
                 memScanner.close();
