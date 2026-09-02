@@ -1,9 +1,8 @@
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class WALLE {
 
-    private static ArrayList<Task> memory; // Memory of what user says
+    private static TaskList tasks; // Tasks WALLE is tracking
     private static Ui ui; // Class handling user interactions
     private static Storage storage; // Class handling loading/saving of memory file
     private static Parser parser; // Class handling interpretation of user commands
@@ -11,7 +10,7 @@ public class WALLE {
     // Main program, running of WALLE chatbot
     public static void main(String[] args) {
         // Initialise WALLE's fields
-        WALLE.memory = new ArrayList<>();
+        WALLE.tasks = new TaskList();
         WALLE.ui = new Ui();
         WALLE.storage = new Storage("src/main/data/memory.txt");
         WALLE.parser = new Parser();
@@ -21,7 +20,7 @@ public class WALLE {
 
         // Pull saved memory from previous session
         try {
-            WALLE.memory = WALLE.storage.load();
+            WALLE.tasks = new TaskList(WALLE.storage.load());
         } catch (WALLEException e) {
             WALLE.ui.printErrorMsg(e);
         } catch (Exception e) {
@@ -59,10 +58,9 @@ public class WALLE {
 
                 case DELETE: {
                     int pos = WALLE.parser.parseIndex(input);
-                    Task tmp = memory.get(pos - 1);
-                    memory.remove(pos - 1);
+                    Task tmp = WALLE.tasks.delete(pos);
                     updateMemoryFile();
-                    WALLE.ui.printTaskDeletionUpdate(tmp, memory.size());
+                    WALLE.ui.printTaskDeletionUpdate(tmp, WALLE.tasks.size());
                     break;
                 }
 
@@ -70,9 +68,9 @@ public class WALLE {
                 case DEADLINE:
                 case EVENT: {
                     Task newTask = WALLE.parser.parseTask(type, input);
-                    WALLE.addToMemory(newTask);
+                    WALLE.tasks.add(newTask);
                     updateMemoryFile();
-                    WALLE.ui.printTaskAdditionUpdate(newTask, memory.size());
+                    WALLE.ui.printTaskAdditionUpdate(newTask, WALLE.tasks.size());
                     break;
                 }
                 }
@@ -91,32 +89,25 @@ public class WALLE {
         WALLE.ui.closeScanner();
     }
 
-    // Add input to current empty slot in memory that memPos is pointing at
-    private static void addToMemory(Task newTask) {
-        memory.add(newTask);
-    }
-
-    // Print out user message history stored in memory
+    // Print out user message history stored in the task list
     private static void list() {
-        WALLE.ui.listTasks(WALLE.memory);
+        WALLE.ui.listTasks(WALLE.tasks.getTasks());
     }
 
-    // Mark specific task in memory as done
+    // Mark specific task in the task list as done
     private static void mark(int pos) {
-        WALLE.memory.get(pos - 1).check();
-        WALLE.ui.printTaskMarkedUpdate(WALLE.memory.get(pos - 1));
+        WALLE.ui.printTaskMarkedUpdate(WALLE.tasks.mark(pos));
     }
 
-    // Mark specific task in memory as not done
+    // Mark specific task in the task list as not done
     private static void unmark(int pos) {
-        WALLE.memory.get(pos - 1).uncheck();
-        WALLE.ui.printTaskUnmarkedUpdate(WALLE.memory.get(pos - 1));
+        WALLE.ui.printTaskUnmarkedUpdate(WALLE.tasks.unmark(pos));
     }
 
     // Persist any changes to the task list made during the session
     private static void updateMemoryFile() {
         try {
-            WALLE.storage.save(memory);
+            WALLE.storage.save(WALLE.tasks.getTasks());
         } catch (IOException e) {
             WALLE.ui.printErrorMsg(e);
         }
