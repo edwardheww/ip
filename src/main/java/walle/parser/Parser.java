@@ -4,10 +4,11 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import walle.exception.InvalidDtFormatException;
-import walle.exception.InvalidTaskTypeException;
-import walle.exception.MissingDescException;
-import walle.exception.WALLEException;
+import walle.exceptions.InvalidDtFormatException;
+import walle.exceptions.InvalidTaskTypeException;
+import walle.exceptions.MissingArgException;
+import walle.exceptions.MissingDescException;
+import walle.exceptions.WALLEException;
 import walle.task.Deadline;
 import walle.task.Event;
 import walle.task.Task;
@@ -77,18 +78,25 @@ public class Parser {
             if (input.strip().equals("deadline")) {
                 throw new MissingDescException("deadline");
             }
-            String deadlineName = input.substring(9).split(" /by ")[0];
-            String endDT = input.substring(9).split(" /by ")[1];
-            return new Deadline(deadlineName, parseDateTime(endDT));
+            String[] deadlineParts = input.substring(9).split(" /by ");
+            if (deadlineParts.length < 2) {
+                throw new MissingArgException("deadline", "/by");
+            }
+            return new Deadline(deadlineParts[0], parseDateTime(deadlineParts[1]));
 
         case EVENT:
             if (input.strip().equals("event")) {
                 throw new MissingDescException("event");
             }
-            String eventName = input.substring(6).split(" /from ")[0];
-            String startDT = input.substring(6).split(" /from ")[1].split(" /to ")[0];
-            String eventEndDT = input.substring(6).split(" /from ")[1].split(" /to ")[1];
-            return new Event(eventName, parseDateTime(startDT), parseDateTime(eventEndDT));
+            String[] eventParts = input.substring(6).split(" /from ");
+            if (eventParts.length < 2) {
+                throw new MissingArgException("event", "/from");
+            }
+            String[] eventTimes = eventParts[1].split(" /to ");
+            if (eventTimes.length < 2) {
+                throw new MissingArgException("event", "/to");
+            }
+            return new Event(eventParts[0], parseDateTime(eventTimes[0]), parseDateTime(eventTimes[1]));
 
         default:
             throw new InvalidTaskTypeException(input.split(" ")[0]);

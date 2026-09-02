@@ -1,4 +1,4 @@
-package walle.exception;
+package walle.exceptions;
 
 public class MissingDescException extends WALLEException {
 

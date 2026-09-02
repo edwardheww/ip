@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import walle.exception.CorruptMemoryException;
-import walle.exception.WALLEException;
+import walle.exceptions.CorruptMemoryException;
+import walle.exceptions.WALLEException;
 import walle.task.Deadline;
 import walle.task.Event;
 import walle.task.Task;

@@ -3,7 +3,7 @@ package walle.ui;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import walle.exception.WALLEException;
+import walle.exceptions.WALLEException;
 import walle.task.Task;
 
 /**

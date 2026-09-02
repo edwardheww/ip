@@ -2,7 +2,7 @@ package walle;
 
 import java.io.IOException;
 
-import walle.exception.WALLEException;
+import walle.exceptions.WALLEException;
 import walle.parser.CommandType;
 import walle.parser.Parser;
 import walle.storage.Storage;
