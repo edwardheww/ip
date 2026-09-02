@@ -1,31 +1,29 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class WALLE {
 
     private static ArrayList<Task> memory; // Memory of what user says
     private static Ui ui; // Class handling user interactions
+    private static Storage storage; // Class handling loading/saving of memory file
 
     // Main program, running of WALLE chatbot
     public static void main(String[] args) {
         // Initialise WALLE's fields
         WALLE.memory = new ArrayList<>();
         WALLE.ui = new Ui();
+        WALLE.storage = new Storage("src/main/data/memory.txt");
 
         // Greeting when started
         WALLE.ui.greetUser();
 
         // Pull saved memory from previous session
         try {
-            WALLE.pullSavedMemory();
+            WALLE.memory = WALLE.storage.load();
         } catch (WALLEException e) {
             WALLE.ui.printErrorMsg(e);
         } catch (Exception e) {
@@ -170,78 +168,10 @@ public class WALLE {
         WALLE.ui.printTaskUnmarkedUpdate(WALLE.memory.get(pos - 1));
     }
 
-    /**
-     * Pulls saved memory from the previous session into the current session.
-     *
-     * <p>
-     * Expected line formats in the memory file:
-     * <ul>
-     * <li>ToDo: {@code <type>;<checkmark>;<task>}</li>
-     * <li>Deadline: {@code <type>;<checkmark>;<task>;<endDT>}</li>
-     * <li>Event: {@code <type>;<checkmark>;<task>;<startDT>;<endDT>}</li>
-     * </ul>
-     *
-     * @throws FileNotFoundException if the memory file cannot be found.
-     * @throws IOException           if the memory file cannot be created or read.
-     * @throws WALLEException        if a line in the memory file is corrupted.
-     */
-    private static void pullSavedMemory() throws FileNotFoundException, IOException, WALLEException {
-        File memFile = new File("src/main/data/memory.txt");
-
-        // Ensuring file exists by creating file if nonexistent
-        if (!memFile.exists()) {
-            File parent = memFile.getParentFile();
-            if (!parent.exists()) {
-                parent.mkdirs();
-            }
-            memFile.createNewFile();
-        }
-
-        Scanner memScanner = new Scanner(memFile);
-
-        while (memScanner.hasNext()) { // Handles saved tasks one by one
-            try {
-                String[] taskData = memScanner.nextLine().split(";");
-                // Handling if saved task is a ToDo
-                if (taskData[0].equals("T")) {
-                    String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    memory.add(new ToDo(task, checked));
-                }
-
-                // Handling if saved task is a Deadline
-                else if (taskData[0].equals("D")) {
-                    String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    String endDT = taskData[3];
-                    memory.add(new Deadline(task, LocalDateTime.parse(endDT), checked));
-                }
-
-                else if (taskData[0].equals("E")) {
-                    String task = taskData[2];
-                    boolean checked = taskData[1].equals("X");
-                    String startDT = taskData[3];
-                    String endDT = taskData[4];
-                    memory.add(new Event(task, LocalDateTime.parse(startDT), LocalDateTime.parse(endDT), checked));
-                }
-            } catch (Exception e) {
-                memScanner.close();
-                throw new CorruptMemoryException();
-            }
-        }
-
-        memScanner.close();
-    }
-
-    // Update memory file with any changes to task list made during session
+    // Persist any changes to the task list made during the session
     private static void updateMemoryFile() {
         try {
-            FileWriter memFw = new FileWriter("src/main/data/memory.txt");
-            for (Task task : memory) {
-                String memInput = task.getMemoryFormat();
-                memFw.write(memInput + System.lineSeparator());
-            }
-            memFw.close();
+            WALLE.storage.save(memory);
         } catch (IOException e) {
             WALLE.ui.printErrorMsg(e);
         }
