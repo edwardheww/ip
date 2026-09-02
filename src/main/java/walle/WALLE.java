@@ -10,6 +10,11 @@ import walle.task.Task;
 import walle.task.TaskList;
 import walle.ui.Ui;
 
+/**
+ * Entry point for the WALLE chatbot. Wires together the {@link Ui}, {@link Storage},
+ * {@link Parser}, and {@link TaskList} components, loads any previously saved tasks,
+ * and drives the main read-command loop until the user says {@code bye}.
+ */
 public class WALLE {
 
     private static TaskList tasks; // Tasks WALLE is tracking
@@ -17,7 +22,12 @@ public class WALLE {
     private static Storage storage; // Class handling loading/saving of memory file
     private static Parser parser; // Class handling interpretation of user commands
 
-    // Main program, running of WALLE chatbot
+    /**
+     * Starts WALLE: greets the user, loads saved tasks, then processes user
+     * input until the user exits.
+     *
+     * @param args unused command-line arguments.
+     */
     public static void main(String[] args) {
         // Initialise WALLE's fields
         WALLE.tasks = new TaskList();
