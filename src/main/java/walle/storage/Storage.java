@@ -66,22 +66,19 @@ public class Storage {
         while (memScanner.hasNext()) { // Handles saved tasks one by one
             try {
                 String[] taskData = memScanner.nextLine().split(";");
-                // Handling if saved task is a ToDo
                 if (taskData[0].equals("T")) {
+                    // Handling if saved task is a ToDo
                     String task = taskData[2];
                     boolean isChecked = taskData[1].equals("X");
                     memory.add(new ToDo(task, isChecked));
-                }
-
-                // Handling if saved task is a Deadline
-                else if (taskData[0].equals("D")) {
+                } else if (taskData[0].equals("D")) {
+                    // Handling if saved task is a Deadline
                     String task = taskData[2];
                     boolean isChecked = taskData[1].equals("X");
                     String endDt = taskData[3];
                     memory.add(new Deadline(task, LocalDateTime.parse(endDt), isChecked));
-                }
-
-                else if (taskData[0].equals("E")) {
+                } else if (taskData[0].equals("E")) {
+                    // Handling if saved task is an Event
                     String task = taskData[2];
                     boolean isChecked = taskData[1].equals("X");
                     String startDt = taskData[3];

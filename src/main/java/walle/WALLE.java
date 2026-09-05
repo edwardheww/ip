@@ -15,7 +15,9 @@ import walle.ui.Ui;
  * {@link Parser}, and {@link TaskList} components, loads any previously saved tasks,
  * and drives the main read-command loop until the user says {@code bye}.
  */
+// CHECKSTYLE.OFF: AbbreviationAsWordInName - "WALLE" is the chatbot's actual name, not an abbreviation to shorten.
 public class WALLE {
+    // CHECKSTYLE.ON: AbbreviationAsWordInName
 
     private static TaskList tasks; // Tasks WALLE is tracking
     private static Ui ui; // Class handling user interactions
@@ -62,43 +64,46 @@ public class WALLE {
                 CommandType type = WALLE.parser.parseCommandType(input);
 
                 switch (type) {
-                case LIST:
-                    WALLE.list();
-                    break;
+                    case LIST:
+                        WALLE.list();
+                        break;
 
-                case MARK:
-                    WALLE.mark(WALLE.parser.parseIndex(input));
-                    updateMemoryFile();
-                    break;
+                    case MARK:
+                        WALLE.mark(WALLE.parser.parseIndex(input));
+                        updateMemoryFile();
+                        break;
 
-                case UNMARK:
-                    WALLE.unmark(WALLE.parser.parseIndex(input));
-                    updateMemoryFile();
-                    break;
+                    case UNMARK:
+                        WALLE.unmark(WALLE.parser.parseIndex(input));
+                        updateMemoryFile();
+                        break;
 
-                case DELETE: {
-                    int pos = WALLE.parser.parseIndex(input);
-                    Task tmp = WALLE.tasks.delete(pos);
-                    updateMemoryFile();
-                    WALLE.ui.printTaskDeletionUpdate(tmp, WALLE.tasks.size());
-                    break;
-                }
+                    case DELETE: {
+                        int pos = WALLE.parser.parseIndex(input);
+                        Task tmp = WALLE.tasks.delete(pos);
+                        updateMemoryFile();
+                        WALLE.ui.printTaskDeletionUpdate(tmp, WALLE.tasks.size());
+                        break;
+                    }
 
-                case TODO:
-                case DEADLINE:
-                case EVENT: {
-                    Task newTask = WALLE.parser.parseTask(type, input);
-                    WALLE.tasks.add(newTask);
-                    updateMemoryFile();
-                    WALLE.ui.printTaskAdditionUpdate(newTask, WALLE.tasks.size());
-                    break;
-                }
+                    case TODO:
+                    case DEADLINE:
+                    case EVENT: {
+                        Task newTask = WALLE.parser.parseTask(type, input);
+                        WALLE.tasks.add(newTask);
+                        updateMemoryFile();
+                        WALLE.ui.printTaskAdditionUpdate(newTask, WALLE.tasks.size());
+                        break;
+                    }
 
-                case FIND: {
-                    String keyword = WALLE.parser.parseKeyword(input);
-                    WALLE.ui.printMatchingTasks(WALLE.tasks.find(keyword));
-                    break;
-                }
+                    case FIND: {
+                        String keyword = WALLE.parser.parseKeyword(input);
+                        WALLE.ui.printMatchingTasks(WALLE.tasks.find(keyword));
+                        break;
+                    }
+
+                    default:
+                        break;
                 }
             } catch (WALLEException e) {
                 WALLE.ui.printErrorMsg(e);
