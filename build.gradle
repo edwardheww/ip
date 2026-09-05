@@ -59,7 +59,7 @@ test {
 }
 
 application {
-    mainClass = 'walle.WALLE'
+    mainClass = 'walle.Launcher'
 }
 
 jar {
