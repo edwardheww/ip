@@ -38,15 +38,15 @@ public class WALLE {
         WALLE.parser = new Parser();
 
         // Greeting when started
-        WALLE.ui.greetUser();
+        System.out.println(WALLE.ui.formatGreeting());
 
         // Pull saved memory from previous session
         try {
             WALLE.tasks = new TaskList(WALLE.storage.load());
         } catch (WALLEException e) {
-            WALLE.ui.printErrorMsg(e);
+            System.out.println(WALLE.ui.formatErrorMsg(e));
         } catch (Exception e) {
-            WALLE.ui.printErrorMsg(e);
+            System.out.println(WALLE.ui.formatErrorMsg(e));
         }
 
         // Start process of echoing user input
@@ -82,7 +82,7 @@ public class WALLE {
                         int pos = WALLE.parser.parseIndex(input);
                         Task tmp = WALLE.tasks.delete(pos);
                         updateMemoryFile();
-                        WALLE.ui.printTaskDeletionUpdate(tmp, WALLE.tasks.size());
+                        System.out.println(WALLE.ui.formatTaskDeletionUpdate(tmp, WALLE.tasks.size()));
                         break;
                     }
 
@@ -92,13 +92,13 @@ public class WALLE {
                         Task newTask = WALLE.parser.parseTask(type, input);
                         WALLE.tasks.add(newTask);
                         updateMemoryFile();
-                        WALLE.ui.printTaskAdditionUpdate(newTask, WALLE.tasks.size());
+                        System.out.println(WALLE.ui.formatTaskAdditionUpdate(newTask, WALLE.tasks.size()));
                         break;
                     }
 
                     case FIND: {
                         String keyword = WALLE.parser.parseKeyword(input);
-                        WALLE.ui.printMatchingTasks(WALLE.tasks.find(keyword));
+                        System.out.println(WALLE.ui.formatMatchingTasks(WALLE.tasks.find(keyword)));
                         break;
                     }
 
@@ -106,7 +106,7 @@ public class WALLE {
                         break;
                 }
             } catch (WALLEException e) {
-                WALLE.ui.printErrorMsg(e);
+                System.out.println(WALLE.ui.formatErrorMsg(e));
             }
 
             // Get next user input
@@ -114,7 +114,7 @@ public class WALLE {
         }
 
         // Print goodbye message
-        WALLE.ui.bidFarewell();
+        System.out.println(WALLE.ui.formatFarewell());
 
         // Close the Ui's input scanner
         WALLE.ui.closeScanner();
@@ -122,17 +122,17 @@ public class WALLE {
 
     // Print out user message history stored in the task list
     private static void list() {
-        WALLE.ui.listTasks(WALLE.tasks.getTasks());
+        System.out.println(WALLE.ui.formatTaskList(WALLE.tasks.getTasks()));
     }
 
     // Mark specific task in the task list as done
     private static void mark(int pos) {
-        WALLE.ui.printTaskMarkedUpdate(WALLE.tasks.mark(pos));
+        System.out.println(WALLE.ui.formatTaskMarkedUpdate(WALLE.tasks.mark(pos)));
     }
 
     // Mark specific task in the task list as not done
     private static void unmark(int pos) {
-        WALLE.ui.printTaskUnmarkedUpdate(WALLE.tasks.unmark(pos));
+        System.out.println(WALLE.ui.formatTaskUnmarkedUpdate(WALLE.tasks.unmark(pos)));
     }
 
     // Persist any changes to the task list made during the session
@@ -140,7 +140,7 @@ public class WALLE {
         try {
             WALLE.storage.save(WALLE.tasks.getTasks());
         } catch (IOException e) {
-            WALLE.ui.printErrorMsg(e);
+            System.out.println(WALLE.ui.formatErrorMsg(e));
         }
     }
 

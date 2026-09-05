@@ -7,8 +7,10 @@ import walle.exceptions.WALLEException;
 import walle.task.Task;
 
 /**
- * Handles all interactions with the user: reading commands from standard
- * input, and printing WALLE's greetings, updates, and error messages.
+ * Handles reading user input, and formats WALLE's greetings, updates, and
+ * error messages for display. Formatting is kept separate from delivery
+ * (printing to a console, or showing in a GUI dialog box) so both the CLI
+ * and the JavaFX GUI can share the exact same message text.
  */
 public class Ui {
 
@@ -31,114 +33,126 @@ public class Ui {
     }
 
     /**
-     * Prints WALLE's greeting when the program starts.
+     * Formats WALLE's greeting when the program starts.
+     *
+     * @return the greeting message.
      */
-    public void greetUser() {
-        String greeting = "\n"
+    public String formatGreeting() {
+        return "\n"
                 + "Hey! I'm WALLE.\n"
                 + "What can I do for you?\n"
                 + "———————————————————————\n";
-        System.out.println(greeting);
     }
 
     /**
-     * Prints WALLE's farewell message when the user exits.
+     * Formats WALLE's farewell message when the user exits.
+     *
+     * @return the farewell message.
      */
-    public void bidFarewell() {
-        System.out.println("\n  Bye bye! See you next time, I hope!\n");
+    public String formatFarewell() {
+        return "\n  Bye bye! See you next time, I hope!\n";
     }
 
     /**
-     * Prints an error message for a generic (non-WALLEException) exception.
+     * Formats an error message for a generic (non-WALLEException) exception.
      *
      * @param e the exception that was thrown.
+     * @return the formatted error message.
      */
-    public void printErrorMsg(Exception e) {
-        System.out.println("\n    ERROR: " + e.getMessage() + " :(\n");
+    public String formatErrorMsg(Exception e) {
+        return "\n    ERROR: " + e.getMessage() + " :(\n";
     }
 
     /**
-     * Prints an error message for a WALLEException, whose message is already
+     * Formats an error message for a WALLEException, whose message is already
      * formatted for direct display to the user.
      *
      * @param e the WALLEException that was thrown.
+     * @return the formatted error message.
      */
-    public void printErrorMsg(WALLEException e) {
-        System.out.println(e.getMessage());
+    public String formatErrorMsg(WALLEException e) {
+        return e.getMessage();
     }
 
     /**
-     * Prints a confirmation after a task has been deleted.
+     * Formats a confirmation after a task has been deleted.
      *
      * @param deletedTask the task that was removed.
      * @param tasksLeft   the number of tasks remaining in the list.
+     * @return the formatted confirmation message.
      */
-    public void printTaskDeletionUpdate(Task deletedTask, int tasksLeft) {
-        System.out.println("\n    Got it! I've removed the task:\n"
+    public String formatTaskDeletionUpdate(Task deletedTask, int tasksLeft) {
+        return "\n    Got it! I've removed the task:\n"
                 + "        " + deletedTask
-                + "\n    " + tasksLeft + " task(s) left, let's go :D\n");
+                + "\n    " + tasksLeft + " task(s) left, let's go :D\n";
     }
 
     /**
-     * Prints a confirmation after a task has been added.
+     * Formats a confirmation after a task has been added.
      *
      * @param newTask  the task that was added.
      * @param numTasks the total number of tasks now in the list.
+     * @return the formatted confirmation message.
      */
-    public void printTaskAdditionUpdate(Task newTask, int numTasks) {
-        System.out.println("\n    Got it! I've added the task:");
-        System.out.printf("        %s\n", newTask);
-        System.out.printf("    Now you have %d task(s) on your list!\n\n", numTasks);
+    public String formatTaskAdditionUpdate(Task newTask, int numTasks) {
+        return "\n    Got it! I've added the task:\n"
+                + "        " + newTask + "\n"
+                + "    Now you have " + numTasks + " task(s) on your list!\n";
     }
 
     /**
-     * Prints every task currently in the given list, numbered from 1.
+     * Formats every task currently in the given list, numbered from 1.
      *
      * @param taskList the list of tasks to display.
+     * @return the formatted task list.
      */
-    public void listTasks(ArrayList<Task> taskList) {
-        printNumberedTasks("Here are the tasks in your list:", taskList);
+    public String formatTaskList(ArrayList<Task> taskList) {
+        return formatNumberedTasks("Here are the tasks in your list:", taskList);
     }
 
     /**
-     * Prints the tasks that matched a {@code find} search, numbered from 1.
+     * Formats the tasks that matched a {@code find} search, numbered from 1.
      *
      * @param matchingTasks the matching tasks to display.
+     * @return the formatted list of matching tasks.
      */
-    public void printMatchingTasks(ArrayList<Task> matchingTasks) {
-        printNumberedTasks("Here are the matching tasks in your list:", matchingTasks);
+    public String formatMatchingTasks(ArrayList<Task> matchingTasks) {
+        return formatNumberedTasks("Here are the matching tasks in your list:", matchingTasks);
     }
 
-    // Print a header followed by the given tasks, numbered from 1
-    private void printNumberedTasks(String header, ArrayList<Task> taskList) {
-        System.out.println("\n  " + header); // Used for newline
+    // Format a header followed by the given tasks, numbered from 1
+    private String formatNumberedTasks(String header, ArrayList<Task> taskList) {
+        StringBuilder message = new StringBuilder("\n  ").append(header);
         for (int pos = 0; pos < taskList.size(); pos++) {
-            System.out.println("   "
-                    + (pos + 1)
-                    + "."
-                    + taskList.get(pos));
+            message.append("\n   ")
+                    .append(pos + 1)
+                    .append(".")
+                    .append(taskList.get(pos));
         }
-        System.out.println(""); // Used for newline
+        message.append("\n");
+        return message.toString();
     }
 
     /**
-     * Prints a confirmation after a task has been marked as done.
+     * Formats a confirmation after a task has been marked as done.
      *
      * @param markedTask the task that was marked.
+     * @return the formatted confirmation message.
      */
-    public void printTaskMarkedUpdate(Task markedTask) {
-        System.out.printf("\n    Nice! I've marked this task as done:\n"
-                + "        %s\n\n", markedTask);
+    public String formatTaskMarkedUpdate(Task markedTask) {
+        return "\n    Nice! I've marked this task as done:\n"
+                + "        " + markedTask + "\n";
     }
 
     /**
-     * Prints a confirmation after a task has been unmarked as done.
+     * Formats a confirmation after a task has been unmarked as done.
      *
      * @param unmarkedTask the task that was unmarked.
+     * @return the formatted confirmation message.
      */
-    public void printTaskUnmarkedUpdate(Task unmarkedTask) {
-        System.out.printf("\n    OK, I've marked this task as not done yet:\n"
-                + "        %s\n\n", unmarkedTask);
+    public String formatTaskUnmarkedUpdate(Task unmarkedTask) {
+        return "\n    OK, I've marked this task as not done yet:\n"
+                + "        " + unmarkedTask + "\n";
     }
 
 }
