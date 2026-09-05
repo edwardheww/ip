@@ -85,8 +85,7 @@ public class ParserTest {
 
     @Test
     public void parseTask_deadlineMissingByArgument_exceptionThrown() {
-        assertThrows(MissingArgException.class,
-                () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report"));
+        assertThrows(MissingArgException.class, () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report"));
     }
 
     @Test
@@ -96,14 +95,14 @@ public class ParserTest {
 
     @Test
     public void parseTask_eventMissingToArgument_exceptionThrown() {
-        assertThrows(MissingArgException.class,
-                () -> parser.parseTask(CommandType.EVENT, "event meeting /from 2026-09-05 1400"));
+        assertThrows(MissingArgException.class, () ->
+                parser.parseTask(CommandType.EVENT, "event meeting /from 2026-09-05 1400"));
     }
 
     @Test
     public void parseTask_invalidDatetimeFormat_exceptionThrown() {
-        assertThrows(InvalidDtFormatException.class,
-                () -> parser.parseTask(CommandType.DEADLINE, "deadline submit report /by not-a-date"));
+        assertThrows(InvalidDtFormatException.class, () ->
+                parser.parseTask(CommandType.DEADLINE, "deadline submit report /by not-a-date"));
     }
 
     @Test
