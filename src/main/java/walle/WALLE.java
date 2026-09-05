@@ -137,6 +137,10 @@ public class WALLE {
             }
         } catch (WALLEException e) {
             return ui.formatErrorMsg(e);
+        } catch (RuntimeException e) {
+            // Catches bugs such as an out-of-range task index, so a caller (CLI or GUI)
+            // gets a visible message instead of the whole interface crashing/hanging.
+            return ui.formatErrorMsg(e);
         }
     }
 
