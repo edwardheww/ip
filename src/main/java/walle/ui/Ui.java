@@ -59,7 +59,7 @@ public class Ui {
      * @param e the exception that was thrown.
      * @return the formatted error message.
      */
-    public String formatErrorMsg(Exception e) {
+    public String formatErrorMessage(Exception e) {
         return "\n    ERROR: " + e.getMessage() + " :(\n";
     }
 
@@ -70,7 +70,7 @@ public class Ui {
      * @param e the WALLEException that was thrown.
      * @return the formatted error message.
      */
-    public String formatErrorMsg(WALLEException e) {
+    public String formatErrorMessage(WALLEException e) {
         return e.getMessage();
     }
 
@@ -82,9 +82,8 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskDeletionUpdate(Task deletedTask, int tasksLeft) {
-        return "\n    Got it! I've removed the task:\n"
-                + "        " + deletedTask
-                + "\n    " + tasksLeft + " task(s) left, let's go :D\n";
+        return formatTaskUpdate("Got it! I've removed the task", deletedTask)
+                + "    " + tasksLeft + " task(s) left, let's go :D\n";
     }
 
     /**
@@ -95,8 +94,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskAdditionUpdate(Task newTask, int numTasks) {
-        return "\n    Got it! I've added the task:\n"
-                + "        " + newTask + "\n"
+        return formatTaskUpdate("Got it! I've added the task", newTask)
                 + "    Now you have " + numTasks + " task(s) on your list!\n";
     }
 
@@ -140,8 +138,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskMarkedUpdate(Task markedTask) {
-        return "\n    Nice! I've marked this task as done:\n"
-                + "        " + markedTask + "\n";
+        return formatTaskUpdate("Nice! I've marked this task as done", markedTask);
     }
 
     /**
@@ -151,8 +148,12 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskUnmarkedUpdate(Task unmarkedTask) {
-        return "\n    OK, I've marked this task as not done yet:\n"
-                + "        " + unmarkedTask + "\n";
+        return formatTaskUpdate("OK, I've marked this task as not done yet", unmarkedTask);
+    }
+
+    // Format a header, colon, and the given task on the following indented line
+    private String formatTaskUpdate(String header, Task task) {
+        return "\n    " + header + ":\n        " + task + "\n";
     }
 
 }
