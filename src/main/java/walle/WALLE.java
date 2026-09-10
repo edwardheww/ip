@@ -43,10 +43,10 @@ public class WALLE {
             loadedTasks = new TaskList(storage.load());
         } catch (WALLEException e) {
             loadedTasks = new TaskList();
-            greetingText += ui.formatErrorMsg(e);
+            greetingText += ui.formatErrorMessage(e);
         } catch (Exception e) {
             loadedTasks = new TaskList();
-            greetingText += ui.formatErrorMsg(e);
+            greetingText += ui.formatErrorMessage(e);
         }
         this.tasks = loadedTasks;
         this.greeting = greetingText;
@@ -139,11 +139,11 @@ public class WALLE {
                     throw new AssertionError("Unhandled CommandType: " + type);
             }
         } catch (WALLEException e) {
-            return ui.formatErrorMsg(e);
+            return ui.formatErrorMessage(e);
         } catch (RuntimeException e) {
             // Catches bugs such as an out-of-range task index, so a caller (CLI or GUI)
             // gets a visible message instead of the whole interface crashing/hanging.
-            return ui.formatErrorMsg(e);
+            return ui.formatErrorMessage(e);
         }
     }
 
@@ -152,7 +152,7 @@ public class WALLE {
         try {
             storage.save(tasks.getTasks());
         } catch (IOException e) {
-            System.out.println(ui.formatErrorMsg(e));
+            System.out.println(ui.formatErrorMessage(e));
         }
     }
 

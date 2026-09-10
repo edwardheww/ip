@@ -59,7 +59,7 @@ public class Ui {
      * @param e the exception that was thrown.
      * @return the formatted error message.
      */
-    public String formatErrorMsg(Exception e) {
+    public String formatErrorMessage(Exception e) {
         return "\n    ERROR: " + e.getMessage() + " :(\n";
     }
 
@@ -70,7 +70,7 @@ public class Ui {
      * @param e the WALLEException that was thrown.
      * @return the formatted error message.
      */
-    public String formatErrorMsg(WALLEException e) {
+    public String formatErrorMessage(WALLEException e) {
         return e.getMessage();
     }
 
