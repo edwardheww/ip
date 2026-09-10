@@ -1,6 +1,7 @@
 package walle.task;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import walle.storage.Storage;
 import walle.ui.Ui;
@@ -89,13 +90,9 @@ public class TaskList {
      * @return the matching tasks, in their original order.
      */
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : this.tasks) {
-            if (task.getTask().contains(keyword)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return this.tasks.stream()
+                .filter(task -> task.getTask().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
