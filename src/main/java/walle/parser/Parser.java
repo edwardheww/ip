@@ -21,6 +21,13 @@ import walle.task.ToDo;
  */
 public class Parser {
 
+    // Lengths of each command word plus its trailing space, e.g. "todo ".length().
+    // Derived from the literal itself so they can't silently drift out of sync with it.
+    private static final int TODO_PREFIX_LENGTH = "todo ".length();
+    private static final int DEADLINE_PREFIX_LENGTH = "deadline ".length();
+    private static final int EVENT_PREFIX_LENGTH = "event ".length();
+    private static final int FIND_PREFIX_LENGTH = "find ".length();
+
     /**
      * Classifies the given raw input into a {@link CommandType}.
      *
@@ -71,7 +78,7 @@ public class Parser {
         if (input.strip().equals("find")) {
             throw new MissingDescException("find");
         }
-        return input.substring(5);
+        return input.substring(FIND_PREFIX_LENGTH);
     }
 
     /**
@@ -88,13 +95,13 @@ public class Parser {
                 if (input.strip().equals("todo")) {
                     throw new MissingDescException("todo");
                 }
-                return new ToDo(input.substring(5));
+                return new ToDo(input.substring(TODO_PREFIX_LENGTH));
 
             case DEADLINE:
                 if (input.strip().equals("deadline")) {
                     throw new MissingDescException("deadline");
                 }
-                String[] deadlineParts = input.substring(9).split(" /by ");
+                String[] deadlineParts = input.substring(DEADLINE_PREFIX_LENGTH).split(" /by ");
                 if (deadlineParts.length < 2) {
                     throw new MissingArgException("deadline", "/by");
                 }
@@ -104,7 +111,7 @@ public class Parser {
                 if (input.strip().equals("event")) {
                     throw new MissingDescException("event");
                 }
-                String[] eventParts = input.substring(6).split(" /from ");
+                String[] eventParts = input.substring(EVENT_PREFIX_LENGTH).split(" /from ");
                 if (eventParts.length < 2) {
                     throw new MissingArgException("event", "/from");
                 }
