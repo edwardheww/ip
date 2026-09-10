@@ -92,38 +92,53 @@ public class Parser {
     public Task parseTask(CommandType type, String input) throws WALLEException {
         switch (type) {
             case TODO:
-                if (input.strip().equals("todo")) {
-                    throw new MissingDescException("todo");
-                }
-                return new ToDo(input.substring(TODO_PREFIX_LENGTH));
+                return parseTodo(input);
 
             case DEADLINE:
-                if (input.strip().equals("deadline")) {
-                    throw new MissingDescException("deadline");
-                }
-                String[] deadlineParts = input.substring(DEADLINE_PREFIX_LENGTH).split(" /by ");
-                if (deadlineParts.length < 2) {
-                    throw new MissingArgException("deadline", "/by");
-                }
-                return new Deadline(deadlineParts[0], parseDateTime(deadlineParts[1]));
+                return parseDeadline(input);
 
             case EVENT:
-                if (input.strip().equals("event")) {
-                    throw new MissingDescException("event");
-                }
-                String[] eventParts = input.substring(EVENT_PREFIX_LENGTH).split(" /from ");
-                if (eventParts.length < 2) {
-                    throw new MissingArgException("event", "/from");
-                }
-                String[] eventTimes = eventParts[1].split(" /to ");
-                if (eventTimes.length < 2) {
-                    throw new MissingArgException("event", "/to");
-                }
-                return new Event(eventParts[0], parseDateTime(eventTimes[0]), parseDateTime(eventTimes[1]));
+                return parseEvent(input);
 
             default:
                 throw new InvalidTaskTypeException(input.split(" ")[0]);
         }
+    }
+
+    // Build a ToDo from a "todo <description>" command
+    private Task parseTodo(String input) {
+        if (input.strip().equals("todo")) {
+            throw new MissingDescException("todo");
+        }
+        return new ToDo(input.substring(TODO_PREFIX_LENGTH));
+    }
+
+    // Build a Deadline from a "deadline <description> /by <datetime>" command
+    private Task parseDeadline(String input) {
+        if (input.strip().equals("deadline")) {
+            throw new MissingDescException("deadline");
+        }
+        String[] deadlineParts = input.substring(DEADLINE_PREFIX_LENGTH).split(" /by ");
+        if (deadlineParts.length < 2) {
+            throw new MissingArgException("deadline", "/by");
+        }
+        return new Deadline(deadlineParts[0], parseDateTime(deadlineParts[1]));
+    }
+
+    // Build an Event from an "event <description> /from <datetime> /to <datetime>" command
+    private Task parseEvent(String input) {
+        if (input.strip().equals("event")) {
+            throw new MissingDescException("event");
+        }
+        String[] eventParts = input.substring(EVENT_PREFIX_LENGTH).split(" /from ");
+        if (eventParts.length < 2) {
+            throw new MissingArgException("event", "/from");
+        }
+        String[] eventTimes = eventParts[1].split(" /to ");
+        if (eventTimes.length < 2) {
+            throw new MissingArgException("event", "/to");
+        }
+        return new Event(eventParts[0], parseDateTime(eventTimes[0]), parseDateTime(eventTimes[1]));
     }
 
     // Parse user's datetime input (format: yyyy-MM-dd HHmm) into a LocalDateTime
