@@ -15,6 +15,8 @@ public abstract class Task {
      * @param task the task's description.
      */
     public Task(String task) {
+        assert task != null && !task.isBlank() : "Task description should never be null/blank; "
+                + "callers (Parser, Storage) are expected to have already rejected that input.";
         this.task = task;
         this.isDone = false;
     }
@@ -27,6 +29,8 @@ public abstract class Task {
      * @param isDone whether the task is already marked done.
      */
     public Task(String task, boolean isDone) {
+        assert task != null && !task.isBlank() : "Task description should never be null/blank; "
+                + "callers (Parser, Storage) are expected to have already rejected that input.";
         this.task = task;
         this.isDone = isDone;
     }
