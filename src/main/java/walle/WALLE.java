@@ -133,7 +133,10 @@ public class WALLE {
                 }
 
                 default:
-                    return "";
+                    // Every CommandType is handled explicitly above; reaching here means a new
+                    // value was added without updating this switch, which is a real bug -- fail
+                    // loudly instead of silently returning a blank response.
+                    throw new AssertionError("Unhandled CommandType: " + type);
             }
         } catch (WALLEException e) {
             return ui.formatErrorMsg(e);
