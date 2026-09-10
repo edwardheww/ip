@@ -46,6 +46,13 @@ public class ParserTest {
     }
 
     @Test
+    public void parseCommandType_noteCommands_returnCorrespondingTypes() {
+        assertEquals(CommandType.NOTE, parser.parseCommandType("note buy milk"));
+        assertEquals(CommandType.LIST_NOTES, parser.parseCommandType("notes"));
+        assertEquals(CommandType.DELETE_NOTE, parser.parseCommandType("deletenote 2"));
+    }
+
+    @Test
     public void parseCommandType_unknownCommand_exceptionThrown() {
         assertThrows(InvalidTaskTypeException.class, () -> parser.parseCommandType("foobar"));
     }
@@ -113,6 +120,16 @@ public class ParserTest {
     @Test
     public void parseKeyword_missingKeyword_exceptionThrown() {
         assertThrows(MissingDescException.class, () -> parser.parseKeyword("find"));
+    }
+
+    @Test
+    public void parseNoteText_validInput_returnsText() {
+        assertEquals("buy milk", parser.parseNoteText("note buy milk"));
+    }
+
+    @Test
+    public void parseNoteText_missingText_exceptionThrown() {
+        assertThrows(MissingDescException.class, () -> parser.parseNoteText("note"));
     }
 
 }

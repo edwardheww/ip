@@ -27,6 +27,7 @@ public class Parser {
     private static final int DEADLINE_PREFIX_LENGTH = "deadline ".length();
     private static final int EVENT_PREFIX_LENGTH = "event ".length();
     private static final int FIND_PREFIX_LENGTH = "find ".length();
+    private static final int NOTE_PREFIX_LENGTH = "note ".length();
 
     /**
      * Classifies the given raw input into a {@link CommandType}.
@@ -52,21 +53,27 @@ public class Parser {
             return CommandType.EVENT;
         } else if (input.strip().equals("find") || input.startsWith("find ")) {
             return CommandType.FIND;
+        } else if (input.strip().equals("notes")) {
+            return CommandType.LIST_NOTES;
+        } else if (input.strip().equals("note") || input.startsWith("note ")) {
+            return CommandType.NOTE;
+        } else if (input.matches("deletenote \\d+")) {
+            return CommandType.DELETE_NOTE;
         } else {
             throw new InvalidTaskTypeException(input.split(" ")[0]);
         }
     }
 
     /**
-     * Extracts the 1-based task index from a {@code mark}/{@code unmark}/{@code delete} command.
+     * Extracts the 1-based index from a {@code mark}/{@code unmark}/{@code delete}/{@code deletenote} command.
      *
      * @param input the raw command string, e.g. {@code "mark 2"}.
      * @return the 1-based index the user referred to.
      */
     public int parseIndex(String input) {
-        assert input.matches("(mark|unmark|delete) \\d+")
+        assert input.matches("(mark|unmark|delete|deletenote) \\d+")
                 : "parseIndex should only be called on input parseCommandType already classified as "
-                + "MARK/UNMARK/DELETE.";
+                + "MARK/UNMARK/DELETE/DELETE_NOTE.";
         return Integer.valueOf(input.split(" ")[1]);
     }
 
@@ -84,6 +91,22 @@ public class Parser {
             throw new MissingDescException("find");
         }
         return input.substring(FIND_PREFIX_LENGTH);
+    }
+
+    /**
+     * Extracts the note text from a {@code note} command.
+     *
+     * @param input the raw command string, e.g. {@code "note buy milk"}.
+     * @return the text of the note to record.
+     * @throws MissingDescException if no text is given.
+     */
+    public String parseNoteText(String input) throws MissingDescException {
+        assert input.strip().equals("note") || input.startsWith("note ")
+                : "parseNoteText should only be called on input parseCommandType already classified as NOTE.";
+        if (input.strip().equals("note")) {
+            throw new MissingDescException("note");
+        }
+        return input.substring(NOTE_PREFIX_LENGTH);
     }
 
     /**
