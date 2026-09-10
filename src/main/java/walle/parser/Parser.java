@@ -64,6 +64,9 @@ public class Parser {
      * @return the 1-based index the user referred to.
      */
     public int parseIndex(String input) {
+        assert input.matches("(mark|unmark|delete) \\d+")
+                : "parseIndex should only be called on input parseCommandType already classified as "
+                + "MARK/UNMARK/DELETE.";
         return Integer.valueOf(input.split(" ")[1]);
     }
 
@@ -75,6 +78,8 @@ public class Parser {
      * @throws MissingDescException if no keyword is given.
      */
     public String parseKeyword(String input) throws MissingDescException {
+        assert input.strip().equals("find") || input.startsWith("find ")
+                : "parseKeyword should only be called on input parseCommandType already classified as FIND.";
         if (input.strip().equals("find")) {
             throw new MissingDescException("find");
         }
