@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import walle.exceptions.CorruptMemoryException;
 import walle.exceptions.WALLEException;
@@ -103,10 +104,17 @@ public class Storage {
      * @throws IOException if the memory file cannot be written to.
      */
     public void save(ArrayList<Task> tasks) throws IOException {
+        String content = tasks.stream()
+                .map(Task::getMemoryFormat)
+                .collect(Collectors.joining(System.lineSeparator()));
+
         FileWriter memFw = new FileWriter(filePath);
-        for (Task task : tasks) {
-            String memInput = task.getMemoryFormat();
-            memFw.write(memInput + System.lineSeparator());
+        // Collectors.joining only places the separator *between* lines, but the original
+        // line-by-line loop wrote one after every line (including the last); an empty task
+        // list must still produce an empty file, so only add the trailing separator when
+        // there's actually content.
+        if (!content.isEmpty()) {
+            memFw.write(content + System.lineSeparator());
         }
         memFw.close();
     }
