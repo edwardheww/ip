@@ -3,6 +3,8 @@ package walle;
 import java.io.IOException;
 
 import walle.exceptions.WALLEException;
+import walle.note.Note;
+import walle.note.NoteList;
 import walle.parser.CommandType;
 import walle.parser.Parser;
 import walle.storage.Storage;
@@ -22,6 +24,7 @@ public class WALLE {
     // CHECKSTYLE.ON: AbbreviationAsWordInName
 
     private final TaskList tasks;
+    private final NoteList notes;
     private final Ui ui;
     private final Storage storage;
     private final Parser parser;
@@ -38,6 +41,7 @@ public class WALLE {
         this.parser = new Parser();
 
         String greetingText = ui.formatGreeting();
+
         TaskList loadedTasks;
         try {
             loadedTasks = new TaskList(storage.load());
@@ -49,6 +53,19 @@ public class WALLE {
             greetingText += ui.formatErrorMessage(e);
         }
         this.tasks = loadedTasks;
+
+        NoteList loadedNotes;
+        try {
+            loadedNotes = new NoteList(storage.loadNotes());
+        } catch (WALLEException e) {
+            loadedNotes = new NoteList();
+            greetingText += ui.formatErrorMessage(e);
+        } catch (Exception e) {
+            loadedNotes = new NoteList();
+            greetingText += ui.formatErrorMessage(e);
+        }
+        this.notes = loadedNotes;
+
         this.greeting = greetingText;
     }
 
@@ -132,6 +149,23 @@ public class WALLE {
                     return ui.formatMatchingTasks(tasks.find(keyword));
                 }
 
+                case NOTE: {
+                    Note newNote = new Note(parser.parseNoteText(input));
+                    notes.add(newNote);
+                    updateMemoryFile();
+                    return ui.formatNoteAdditionUpdate(newNote, notes.size());
+                }
+
+                case LIST_NOTES:
+                    return ui.formatNoteList(notes.getNotes());
+
+                case DELETE_NOTE: {
+                    int pos = parser.parseIndex(input);
+                    Note deletedNote = notes.delete(pos);
+                    updateMemoryFile();
+                    return ui.formatNoteDeletionUpdate(deletedNote, notes.size());
+                }
+
                 default:
                     // Every CommandType is handled explicitly above; reaching here means a new
                     // value was added without updating this switch, which is a real bug -- fail
@@ -147,10 +181,11 @@ public class WALLE {
         }
     }
 
-    // Persist any changes to the task list made during the session
+    // Persist any changes to the task list or note list made during the session
     private void updateMemoryFile() {
         try {
             storage.save(tasks.getTasks());
+            storage.saveNotes(notes.getNotes());
         } catch (IOException e) {
             System.out.println(ui.formatErrorMessage(e));
         }
