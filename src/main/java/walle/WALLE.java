@@ -34,7 +34,7 @@ public class WALLE {
      */
     public WALLE() {
         this.ui = new Ui();
-        this.storage = new Storage("src/main/data/memory.txt");
+        this.storage = new Storage("src/main/data/memory.txt", "src/main/data/notes.txt");
         this.parser = new Parser();
 
         String greetingText = ui.formatGreeting();

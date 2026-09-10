@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import walle.exceptions.CorruptMemoryException;
 import walle.exceptions.WALLEException;
+import walle.note.Note;
 import walle.task.Deadline;
 import walle.task.Event;
 import walle.task.Task;
@@ -22,14 +23,17 @@ import walle.task.ToDo;
 public class Storage {
 
     private final String filePath;
+    private final String noteFilePath;
 
     /**
-     * Creates a Storage backed by the memory file at the given path.
+     * Creates a Storage backed by the given memory and notes files.
      *
-     * @param filePath path to the memory file.
+     * @param filePath     path to the task memory file.
+     * @param noteFilePath path to the notes file.
      */
-    public Storage(String filePath) {
+    public Storage(String filePath, String noteFilePath) {
         this.filePath = filePath;
+        this.noteFilePath = noteFilePath;
     }
 
     /**
@@ -139,6 +143,60 @@ public class Storage {
             memFw.write(content + System.lineSeparator());
         }
         memFw.close();
+    }
+
+    /**
+     * Loads notes previously saved to the notes file, creating the file
+     * (and any missing parent directories) if it does not yet exist.
+     *
+     * <p>Expected line format: {@code N;note text}
+     *
+     * @return the list of notes read from the notes file.
+     * @throws FileNotFoundException if the notes file cannot be found.
+     * @throws IOException           if the notes file cannot be created.
+     * @throws WALLEException        if a line in the notes file is corrupted.
+     */
+    public ArrayList<Note> loadNotes() throws FileNotFoundException, IOException, WALLEException {
+        ArrayList<Note> notes = new ArrayList<>();
+        File noteFile = new File(noteFilePath);
+        ensureFileExists(noteFile);
+
+        Scanner noteScanner = new Scanner(noteFile);
+
+        while (noteScanner.hasNext()) {
+            try {
+                // Limit to 2 parts so a semicolon in the note's own text isn't mistaken
+                // for another field.
+                String[] noteData = noteScanner.nextLine().split(";", 2);
+                if (noteData[0].equals("N")) {
+                    notes.add(new Note(noteData[1]));
+                }
+            } catch (Exception e) {
+                noteScanner.close();
+                throw new CorruptMemoryException();
+            }
+        }
+
+        noteScanner.close();
+        return notes;
+    }
+
+    /**
+     * Overwrites the notes file with the current contents of the given note list.
+     *
+     * @param notes the notes to persist.
+     * @throws IOException if the notes file cannot be written to.
+     */
+    public void saveNotes(ArrayList<Note> notes) throws IOException {
+        String content = notes.stream()
+                .map(Note::getMemoryFormat)
+                .collect(Collectors.joining(System.lineSeparator()));
+
+        FileWriter noteFw = new FileWriter(noteFilePath);
+        if (!content.isEmpty()) {
+            noteFw.write(content + System.lineSeparator());
+        }
+        noteFw.close();
     }
 
 }
