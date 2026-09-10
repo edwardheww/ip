@@ -1,9 +1,11 @@
 package walle.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import walle.exceptions.WALLEException;
+import walle.note.Note;
 import walle.task.Task;
 
 /**
@@ -82,7 +84,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskDeletionUpdate(Task deletedTask, int tasksLeft) {
-        return formatTaskUpdate("Got it! I've removed the task", deletedTask)
+        return formatItemUpdate("Got it! I've removed the task", deletedTask)
                 + "    " + tasksLeft + " task(s) left, let's go :D\n";
     }
 
@@ -94,7 +96,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskAdditionUpdate(Task newTask, int numTasks) {
-        return formatTaskUpdate("Got it! I've added the task", newTask)
+        return formatItemUpdate("Got it! I've added the task", newTask)
                 + "    Now you have " + numTasks + " task(s) on your list!\n";
     }
 
@@ -105,7 +107,7 @@ public class Ui {
      * @return the formatted task list.
      */
     public String formatTaskList(ArrayList<Task> taskList) {
-        return formatNumberedTasks("Here are the tasks in your list:", taskList);
+        return formatNumberedItems("Here are the tasks in your list:", taskList);
     }
 
     /**
@@ -115,20 +117,7 @@ public class Ui {
      * @return the formatted list of matching tasks.
      */
     public String formatMatchingTasks(ArrayList<Task> matchingTasks) {
-        return formatNumberedTasks("Here are the matching tasks in your list:", matchingTasks);
-    }
-
-    // Format a header followed by the given tasks, numbered from 1
-    private String formatNumberedTasks(String header, ArrayList<Task> taskList) {
-        StringBuilder message = new StringBuilder("\n  ").append(header);
-        for (int pos = 0; pos < taskList.size(); pos++) {
-            message.append("\n   ")
-                    .append(pos + 1)
-                    .append(".")
-                    .append(taskList.get(pos));
-        }
-        message.append("\n");
-        return message.toString();
+        return formatNumberedItems("Here are the matching tasks in your list:", matchingTasks);
     }
 
     /**
@@ -138,7 +127,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskMarkedUpdate(Task markedTask) {
-        return formatTaskUpdate("Nice! I've marked this task as done", markedTask);
+        return formatItemUpdate("Nice! I've marked this task as done", markedTask);
     }
 
     /**
@@ -148,12 +137,59 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String formatTaskUnmarkedUpdate(Task unmarkedTask) {
-        return formatTaskUpdate("OK, I've marked this task as not done yet", unmarkedTask);
+        return formatItemUpdate("OK, I've marked this task as not done yet", unmarkedTask);
     }
 
-    // Format a header, colon, and the given task on the following indented line
-    private String formatTaskUpdate(String header, Task task) {
-        return "\n    " + header + ":\n        " + task + "\n";
+    /**
+     * Formats a confirmation after a note has been added.
+     *
+     * @param newNote  the note that was added.
+     * @param numNotes the total number of notes now recorded.
+     * @return the formatted confirmation message.
+     */
+    public String formatNoteAdditionUpdate(Note newNote, int numNotes) {
+        return formatItemUpdate("Got it! I've added the note", newNote)
+                + "    Now you have " + numNotes + " note(s) recorded!\n";
+    }
+
+    /**
+     * Formats a confirmation after a note has been deleted.
+     *
+     * @param deletedNote the note that was removed.
+     * @param notesLeft   the number of notes remaining.
+     * @return the formatted confirmation message.
+     */
+    public String formatNoteDeletionUpdate(Note deletedNote, int notesLeft) {
+        return formatItemUpdate("Got it! I've removed the note", deletedNote)
+                + "    " + notesLeft + " note(s) left\n";
+    }
+
+    /**
+     * Formats every note currently recorded, numbered from 1.
+     *
+     * @param noteList the list of notes to display.
+     * @return the formatted note list.
+     */
+    public String formatNoteList(ArrayList<Note> noteList) {
+        return formatNumberedItems("Here are your notes:", noteList);
+    }
+
+    // Format a header followed by the given items, numbered from 1
+    private String formatNumberedItems(String header, List<?> items) {
+        StringBuilder message = new StringBuilder("\n  ").append(header);
+        for (int pos = 0; pos < items.size(); pos++) {
+            message.append("\n   ")
+                    .append(pos + 1)
+                    .append(".")
+                    .append(items.get(pos));
+        }
+        message.append("\n");
+        return message.toString();
+    }
+
+    // Format a header, colon, and the given item on the following indented line
+    private String formatItemUpdate(String header, Object item) {
+        return "\n    " + header + ":\n        " + item + "\n";
     }
 
 }
