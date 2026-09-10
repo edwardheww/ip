@@ -51,40 +51,16 @@ public class Storage {
     public ArrayList<Task> load() throws FileNotFoundException, IOException, WALLEException {
         ArrayList<Task> memory = new ArrayList<>();
         File memFile = new File(filePath);
-
-        // Ensuring file exists by creating file if nonexistent
-        if (!memFile.exists()) {
-            File parent = memFile.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-            memFile.createNewFile();
-        }
+        ensureFileExists(memFile);
 
         Scanner memScanner = new Scanner(memFile);
 
         while (memScanner.hasNext()) { // Handles saved tasks one by one
             try {
                 String[] taskData = memScanner.nextLine().split(";");
-                if (taskData[0].equals("T")) {
-                    // Handling if saved task is a ToDo
-                    String task = taskData[2];
-                    boolean isChecked = taskData[1].equals("X");
-                    memory.add(new ToDo(task, isChecked));
-                } else if (taskData[0].equals("D")) {
-                    // Handling if saved task is a Deadline
-                    String task = taskData[2];
-                    boolean isChecked = taskData[1].equals("X");
-                    String endDt = taskData[3];
-                    memory.add(new Deadline(task, LocalDateTime.parse(endDt), isChecked));
-                } else if (taskData[0].equals("E")) {
-                    // Handling if saved task is an Event
-                    String task = taskData[2];
-                    boolean isChecked = taskData[1].equals("X");
-                    String startDt = taskData[3];
-                    String endDt = taskData[4];
-                    memory.add(new Event(task, LocalDateTime.parse(startDt),
-                            LocalDateTime.parse(endDt), isChecked));
+                Task task = parseTaskLine(taskData);
+                if (task != null) {
+                    memory.add(task);
                 }
             } catch (Exception e) {
                 memScanner.close();
@@ -94,6 +70,52 @@ public class Storage {
 
         memScanner.close();
         return memory;
+    }
+
+    // Creates the memory file (and any missing parent directories) if it doesn't already exist
+    private void ensureFileExists(File memFile) throws IOException {
+        if (!memFile.exists()) {
+            File parent = memFile.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
+            memFile.createNewFile();
+        }
+    }
+
+    // Parses one semicolon-separated memory-file line, or returns null if its type marker is unrecognized
+    private Task parseTaskLine(String[] taskData) {
+        switch (taskData[0]) {
+            case "T":
+                return parseToDoLine(taskData);
+            case "D":
+                return parseDeadlineLine(taskData);
+            case "E":
+                return parseEventLine(taskData);
+            default:
+                return null;
+        }
+    }
+
+    private Task parseToDoLine(String[] taskData) {
+        String task = taskData[2];
+        boolean isChecked = taskData[1].equals("X");
+        return new ToDo(task, isChecked);
+    }
+
+    private Task parseDeadlineLine(String[] taskData) {
+        String task = taskData[2];
+        boolean isChecked = taskData[1].equals("X");
+        String endDt = taskData[3];
+        return new Deadline(task, LocalDateTime.parse(endDt), isChecked);
+    }
+
+    private Task parseEventLine(String[] taskData) {
+        String task = taskData[2];
+        boolean isChecked = taskData[1].equals("X");
+        String startDt = taskData[3];
+        String endDt = taskData[4];
+        return new Event(task, LocalDateTime.parse(startDt), LocalDateTime.parse(endDt), isChecked);
     }
 
     /**
