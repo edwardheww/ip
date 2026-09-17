@@ -30,11 +30,13 @@ public class MainWindow extends AnchorPane {
     private final Image walleImage = new Image(this.getClass().getResourceAsStream("/images/walle.png"));
 
     /**
-     * Binds the scroll pane to auto-scroll to the bottom whenever new dialog is added.
+     * Scrolls the scroll pane to the bottom whenever new dialog is added. This uses a
+     * listener rather than a direct binding, since binding vvalueProperty would lock it
+     * permanently and block the user from scrolling manually (e.g. with the mouse wheel).
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.heightProperty().addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(1.0));
     }
 
     /**
