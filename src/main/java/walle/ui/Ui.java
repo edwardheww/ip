@@ -77,6 +77,17 @@ public class Ui {
     }
 
     /**
+     * Formats a warning that some lines in a save file were skipped because
+     * their content wasn't as expected.
+     *
+     * @param skippedLines the number of lines that were skipped.
+     * @return the formatted warning message.
+     */
+    public String formatSkippedLinesWarning(int skippedLines) {
+        return "\n   WARNING :( " + skippedLines + " saved line(s) looked corrupted and were skipped.\n";
+    }
+
+    /**
      * Formats a confirmation after a task has been deleted.
      *
      * @param deletedTask the task that was removed.

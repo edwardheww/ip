@@ -8,7 +8,9 @@ import walle.note.Note;
 import walle.note.NoteList;
 import walle.parser.CommandType;
 import walle.parser.Parser;
+import walle.storage.NoteLoadResult;
 import walle.storage.Storage;
+import walle.storage.TaskLoadResult;
 import walle.task.Task;
 import walle.task.TaskList;
 import walle.ui.Ui;
@@ -45,10 +47,11 @@ public class WALLE {
 
         TaskList loadedTasks;
         try {
-            loadedTasks = new TaskList(storage.load());
-        } catch (WALLEException e) {
-            loadedTasks = new TaskList();
-            greetingText += ui.formatErrorMessage(e);
+            TaskLoadResult result = storage.load();
+            loadedTasks = new TaskList(result.tasks());
+            if (result.skippedLines() > 0) {
+                greetingText += ui.formatSkippedLinesWarning(result.skippedLines());
+            }
         } catch (Exception e) {
             loadedTasks = new TaskList();
             greetingText += ui.formatErrorMessage(e);
@@ -57,10 +60,11 @@ public class WALLE {
 
         NoteList loadedNotes;
         try {
-            loadedNotes = new NoteList(storage.loadNotes());
-        } catch (WALLEException e) {
-            loadedNotes = new NoteList();
-            greetingText += ui.formatErrorMessage(e);
+            NoteLoadResult result = storage.loadNotes();
+            loadedNotes = new NoteList(result.notes());
+            if (result.skippedLines() > 0) {
+                greetingText += ui.formatSkippedLinesWarning(result.skippedLines());
+            }
         } catch (Exception e) {
             loadedNotes = new NoteList();
             greetingText += ui.formatErrorMessage(e);

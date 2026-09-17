@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import walle.exceptions.CorruptMemoryException;
-import walle.exceptions.WALLEException;
 import walle.note.Note;
 import walle.task.Deadline;
 import walle.task.Event;
@@ -48,33 +46,38 @@ public class Storage {
      * <li>Event: {@code <type>;<checkmark>;<task>;<startDt>;<endDt>}</li>
      * </ul>
      *
-     * @return the list of tasks read from the memory file.
+     * @return the tasks read from the memory file, and how many lines were
+     *         skipped because they couldn't be parsed.
      * @throws FileNotFoundException if the memory file cannot be found.
      * @throws IOException           if the memory file cannot be created.
-     * @throws WALLEException        if a line in the memory file is corrupted.
      */
-    public ArrayList<Task> load() throws FileNotFoundException, IOException, WALLEException {
+    public TaskLoadResult load() throws FileNotFoundException, IOException {
         ArrayList<Task> memory = new ArrayList<>();
         File memFile = new File(filePath);
         ensureFileExists(memFile);
 
         Scanner memScanner = new Scanner(memFile);
+        int skippedLines = 0;
 
-        while (memScanner.hasNext()) { // Handles saved tasks one by one
+        // Handles saved tasks one by one; a line that fails to parse (wrong field
+        // count, unreadable date, unrecognised type marker) is skipped rather than
+        // discarding every task that loaded fine before it.
+        while (memScanner.hasNext()) {
             try {
                 String[] taskData = memScanner.nextLine().split(";");
                 Task task = parseTaskLine(taskData);
                 if (task != null) {
                     memory.add(task);
+                } else {
+                    skippedLines++;
                 }
             } catch (Exception e) {
-                memScanner.close();
-                throw new CorruptMemoryException();
+                skippedLines++;
             }
         }
 
         memScanner.close();
-        return memory;
+        return new TaskLoadResult(memory, skippedLines);
     }
 
     // Creates the memory file (and any missing parent directories) if it doesn't already exist
@@ -151,17 +154,18 @@ public class Storage {
      *
      * <p>Expected line format: {@code N;note text}
      *
-     * @return the list of notes read from the notes file.
+     * @return the notes read from the notes file, and how many lines were
+     *         skipped because they couldn't be parsed.
      * @throws FileNotFoundException if the notes file cannot be found.
      * @throws IOException           if the notes file cannot be created.
-     * @throws WALLEException        if a line in the notes file is corrupted.
      */
-    public ArrayList<Note> loadNotes() throws FileNotFoundException, IOException, WALLEException {
+    public NoteLoadResult loadNotes() throws FileNotFoundException, IOException {
         ArrayList<Note> notes = new ArrayList<>();
         File noteFile = new File(noteFilePath);
         ensureFileExists(noteFile);
 
         Scanner noteScanner = new Scanner(noteFile);
+        int skippedLines = 0;
 
         while (noteScanner.hasNext()) {
             try {
@@ -170,15 +174,16 @@ public class Storage {
                 String[] noteData = noteScanner.nextLine().split(";", 2);
                 if (noteData[0].equals("N")) {
                     notes.add(new Note(noteData[1]));
+                } else {
+                    skippedLines++;
                 }
             } catch (Exception e) {
-                noteScanner.close();
-                throw new CorruptMemoryException();
+                skippedLines++;
             }
         }
 
         noteScanner.close();
-        return notes;
+        return new NoteLoadResult(notes, skippedLines);
     }
 
     /**
