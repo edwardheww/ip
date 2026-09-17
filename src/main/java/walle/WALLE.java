@@ -120,7 +120,7 @@ public class WALLE {
         } catch (WALLEException e) {
             return new Response(ui.formatErrorMessage(e), true);
         } catch (RuntimeException e) {
-            // Catches bugs such as an out-of-range task index, so a caller (CLI or GUI)
+            // Last-resort catch-all for unanticipated bugs, so a caller (CLI or GUI)
             // gets a visible message instead of the whole interface crashing/hanging.
             return new Response(ui.formatErrorMessage(e), true);
         }

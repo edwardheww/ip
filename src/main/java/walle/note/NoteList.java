@@ -3,6 +3,7 @@ package walle.note;
 import java.util.ArrayList;
 
 import walle.exceptions.DuplicateEntryException;
+import walle.exceptions.InvalidIndexException;
 
 /**
  * Holds the list of notes WALLE is tracking, and provides operations to
@@ -47,8 +48,12 @@ public class NoteList {
      *
      * @param pos the 1-based position of the note to remove.
      * @return the note that was removed.
+     * @throws InvalidIndexException if pos isn't a valid position in the list.
      */
     public Note delete(int pos) {
+        if (pos < 1 || pos > this.notes.size()) {
+            throw new InvalidIndexException(pos, this.notes.size(), "note");
+        }
         return this.notes.remove(pos - 1);
     }
 

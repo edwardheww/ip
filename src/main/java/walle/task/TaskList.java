@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import walle.exceptions.DuplicateEntryException;
+import walle.exceptions.InvalidIndexException;
 import walle.storage.Storage;
 import walle.ui.Ui;
 
@@ -50,8 +51,10 @@ public class TaskList {
      *
      * @param pos the 1-based position of the task to remove.
      * @return the task that was removed.
+     * @throws InvalidIndexException if pos isn't a valid position in the list.
      */
     public Task delete(int pos) {
+        requireValidIndex(pos);
         return this.tasks.remove(pos - 1);
     }
 
@@ -60,8 +63,10 @@ public class TaskList {
      *
      * @param pos the 1-based position of the task.
      * @return the task at that position.
+     * @throws InvalidIndexException if pos isn't a valid position in the list.
      */
     public Task get(int pos) {
+        requireValidIndex(pos);
         return this.tasks.get(pos - 1);
     }
 
@@ -70,8 +75,10 @@ public class TaskList {
      *
      * @param pos the 1-based position of the task to mark.
      * @return the task that was marked.
+     * @throws InvalidIndexException if pos isn't a valid position in the list.
      */
     public Task mark(int pos) {
+        requireValidIndex(pos);
         Task task = this.tasks.get(pos - 1);
         task.check();
         return task;
@@ -82,11 +89,21 @@ public class TaskList {
      *
      * @param pos the 1-based position of the task to unmark.
      * @return the task that was unmarked.
+     * @throws InvalidIndexException if pos isn't a valid position in the list.
      */
     public Task unmark(int pos) {
+        requireValidIndex(pos);
         Task task = this.tasks.get(pos - 1);
         task.uncheck();
         return task;
+    }
+
+    // Throws a friendly InvalidIndexException instead of letting an out-of-range
+    // position surface as a raw IndexOutOfBoundsException.
+    private void requireValidIndex(int pos) {
+        if (pos < 1 || pos > this.tasks.size()) {
+            throw new InvalidIndexException(pos, this.tasks.size(), "task");
+        }
     }
 
     /**
