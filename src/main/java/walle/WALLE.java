@@ -84,7 +84,7 @@ public class WALLE {
 
         String input = ui.readCommand();
         while (!input.equals("bye")) {
-            System.out.println(getResponse(input));
+            System.out.println(getResponse(input).text());
             input = ui.readCommand();
         }
 
@@ -106,78 +106,85 @@ public class WALLE {
      * persisting any change to the task list as a side effect.
      *
      * @param input the raw command string entered by the user.
-     * @return the response to show the user.
+     * @return the response to show the user, flagged as an error if the
+     *         command failed.
      */
-    public String getResponse(String input) {
+    public Response getResponse(String input) {
         try {
-            CommandType type = parser.parseCommandType(input);
-
-            switch (type) {
-                case LIST:
-                    return ui.formatTaskList(tasks.getTasks());
-
-                case MARK: {
-                    String response = ui.formatTaskMarkedUpdate(tasks.mark(parser.parseIndex(input)));
-                    updateMemoryFile();
-                    return response;
-                }
-
-                case UNMARK: {
-                    String response = ui.formatTaskUnmarkedUpdate(tasks.unmark(parser.parseIndex(input)));
-                    updateMemoryFile();
-                    return response;
-                }
-
-                case DELETE: {
-                    int pos = parser.parseIndex(input);
-                    Task tmp = tasks.delete(pos);
-                    updateMemoryFile();
-                    return ui.formatTaskDeletionUpdate(tmp, tasks.size());
-                }
-
-                case TODO:
-                case DEADLINE:
-                case EVENT: {
-                    Task newTask = parser.parseTask(type, input);
-                    tasks.add(newTask);
-                    updateMemoryFile();
-                    return ui.formatTaskAdditionUpdate(newTask, tasks.size());
-                }
-
-                case FIND: {
-                    String keyword = parser.parseKeyword(input);
-                    return ui.formatMatchingTasks(tasks.find(keyword));
-                }
-
-                case NOTE: {
-                    Note newNote = new Note(parser.parseNoteText(input));
-                    notes.add(newNote);
-                    updateMemoryFile();
-                    return ui.formatNoteAdditionUpdate(newNote, notes.size());
-                }
-
-                case LIST_NOTES:
-                    return ui.formatNoteList(notes.getNotes());
-
-                case DELETE_NOTE: {
-                    int pos = parser.parseIndex(input);
-                    Note deletedNote = notes.delete(pos);
-                    updateMemoryFile();
-                    return ui.formatNoteDeletionUpdate(deletedNote, notes.size());
-                }
-
-                default:
-                    // Every CommandType is handled explicitly above; reaching here means a new
-                    // value was added without updating this switch, which is a real bug -- fail
-                    // loudly instead of silently returning a blank response.
-                    throw new AssertionError("Unhandled CommandType: " + type);
-            }
+            return new Response(processCommand(input), false);
         } catch (WALLEException e) {
-            return ui.formatErrorMessage(e);
+            return new Response(ui.formatErrorMessage(e), true);
         } catch (RuntimeException e) {
             // Catches bugs such as an out-of-range task index, so a caller (CLI or GUI)
             // gets a visible message instead of the whole interface crashing/hanging.
-            return ui.formatErrorMessage(e);
+            return new Response(ui.formatErrorMessage(e), true);
+        }
+    }
+
+    // Runs one command and returns its reply text; throws on failure so
+    // getResponse can turn that into an error-flagged Response.
+    private String processCommand(String input) {
+        CommandType type = parser.parseCommandType(input);
+
+        switch (type) {
+        case LIST:
+            return ui.formatTaskList(tasks.getTasks());
+
+        case MARK: {
+            String response = ui.formatTaskMarkedUpdate(tasks.mark(parser.parseIndex(input)));
+            updateMemoryFile();
+            return response;
+        }
+
+        case UNMARK: {
+            String response = ui.formatTaskUnmarkedUpdate(tasks.unmark(parser.parseIndex(input)));
+            updateMemoryFile();
+            return response;
+        }
+
+        case DELETE: {
+            int pos = parser.parseIndex(input);
+            Task tmp = tasks.delete(pos);
+            updateMemoryFile();
+            return ui.formatTaskDeletionUpdate(tmp, tasks.size());
+        }
+
+        case TODO:
+        case DEADLINE:
+        case EVENT: {
+            Task newTask = parser.parseTask(type, input);
+            tasks.add(newTask);
+            updateMemoryFile();
+            return ui.formatTaskAdditionUpdate(newTask, tasks.size());
+        }
+
+        case FIND: {
+            String keyword = parser.parseKeyword(input);
+            return ui.formatMatchingTasks(tasks.find(keyword));
+        }
+
+        case NOTE: {
+            Note newNote = new Note(parser.parseNoteText(input));
+            notes.add(newNote);
+            updateMemoryFile();
+            return ui.formatNoteAdditionUpdate(newNote, notes.size());
+        }
+
+        case LIST_NOTES:
+            return ui.formatNoteList(notes.getNotes());
+
+        case DELETE_NOTE: {
+            int pos = parser.parseIndex(input);
+            Note deletedNote = notes.delete(pos);
+            updateMemoryFile();
+            return ui.formatNoteDeletionUpdate(deletedNote, notes.size());
+        }
+
+        default:
+            // Every CommandType is handled explicitly above; reaching here means a new
+            // value was added without updating this switch, which is a real bug -- fail
+            // loudly instead of silently returning a blank response.
+            throw new AssertionError("Unhandled CommandType: " + type);
         }
     }
 
