@@ -1,5 +1,7 @@
 package walle.note;
 
+import java.util.Objects;
+
 /**
  * A small snippet of text the user wants to record, e.g. their own waist
  * size, or a movie title they want to remember.
@@ -31,6 +33,26 @@ public class Note {
     @Override
     public String toString() {
         return "[N] " + text;
+    }
+
+    /**
+     * Two Notes are equal if they have the same text -- used to detect
+     * duplicate notes being added.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Note)) {
+            return false;
+        }
+        return text.equals(((Note) obj).text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text);
     }
 
 }

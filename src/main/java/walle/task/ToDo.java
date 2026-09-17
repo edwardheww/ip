@@ -1,5 +1,7 @@
 package walle.task;
 
+import java.util.Objects;
+
 /**
  * A task with a description only, no associated date/time.
  */
@@ -39,6 +41,26 @@ public class ToDo extends Task {
     @Override
     public String toString() {
         return "[T]" + super.toString();
+    }
+
+    /**
+     * Two ToDos are equal if they have the same description, regardless of
+     * completion status -- used to detect duplicate tasks being added.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ToDo)) {
+            return false;
+        }
+        return getTask().equals(((ToDo) obj).getTask());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ToDo.class, getTask());
     }
 
 }

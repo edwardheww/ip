@@ -3,6 +3,7 @@ package walle.task;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import walle.exceptions.DuplicateEntryException;
 import walle.storage.Storage;
 import walle.ui.Ui;
 
@@ -34,8 +35,13 @@ public class TaskList {
      * Adds a task to the end of the list.
      *
      * @param task the task to add.
+     * @throws DuplicateEntryException if an identical task (same description
+     *                                 and date/time) is already in the list.
      */
     public void add(Task task) {
+        if (this.tasks.contains(task)) {
+            throw new DuplicateEntryException("task");
+        }
         this.tasks.add(task);
     }
 

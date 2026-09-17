@@ -2,6 +2,7 @@ package walle.task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import walle.exceptions.InvalidDateRangeException;
 
@@ -63,6 +64,28 @@ public class Event extends Task {
                 + " (from: " + this.startDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
                 + " to: " + this.endDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
                 + ")";
+    }
+
+    /**
+     * Two Events are equal if they have the same description and start/end
+     * date/time, regardless of completion status -- used to detect
+     * duplicate tasks being added.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Event)) {
+            return false;
+        }
+        Event other = (Event) obj;
+        return getTask().equals(other.getTask()) && startDt.equals(other.startDt) && endDt.equals(other.endDt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Event.class, getTask(), startDt, endDt);
     }
 
 }

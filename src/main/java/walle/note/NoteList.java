@@ -2,6 +2,8 @@ package walle.note;
 
 import java.util.ArrayList;
 
+import walle.exceptions.DuplicateEntryException;
+
 /**
  * Holds the list of notes WALLE is tracking, and provides operations to
  * add, remove, and retrieve notes by their 1-based position in the list.
@@ -30,8 +32,13 @@ public class NoteList {
      * Adds a note to the end of the list.
      *
      * @param note the note to add.
+     * @throws DuplicateEntryException if an identical note (same text) is
+     *                                 already in the list.
      */
     public void add(Note note) {
+        if (this.notes.contains(note)) {
+            throw new DuplicateEntryException("note");
+        }
         this.notes.add(note);
     }
 

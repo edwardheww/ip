@@ -2,6 +2,7 @@ package walle.task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * A task with a description and a due date/time.
@@ -51,6 +52,28 @@ public class Deadline extends Task {
         return "[D]"
                 + super.toString()
                 + " (by: " + this.endDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ")";
+    }
+
+    /**
+     * Two Deadlines are equal if they have the same description and due
+     * date/time, regardless of completion status -- used to detect
+     * duplicate tasks being added.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Deadline)) {
+            return false;
+        }
+        Deadline other = (Deadline) obj;
+        return getTask().equals(other.getTask()) && endDt.equals(other.endDt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Deadline.class, getTask(), endDt);
     }
 
 }
