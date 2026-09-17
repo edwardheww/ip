@@ -3,6 +3,8 @@ package walle.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import walle.exceptions.InvalidDateRangeException;
+
 /**
  * A task with a description and a start/end date-time range.
  */
@@ -19,9 +21,7 @@ public class Event extends Task {
      * @param endDt   the date/time the event ends.
      */
     public Event(String task, LocalDateTime startDt, LocalDateTime endDt) {
-        super(task);
-        this.startDt = startDt;
-        this.endDt = endDt;
+        this(task, startDt, endDt, false);
     }
 
     /**
@@ -32,9 +32,13 @@ public class Event extends Task {
      * @param startDt   the date/time the event starts.
      * @param endDt     the date/time the event ends.
      * @param isChecked whether the task is already marked done.
+     * @throws InvalidDateRangeException if startDt is not strictly before endDt.
      */
     public Event(String task, LocalDateTime startDt, LocalDateTime endDt, boolean isChecked) {
         super(task, isChecked);
+        if (!startDt.isBefore(endDt)) {
+            throw new InvalidDateRangeException();
+        }
         this.startDt = startDt;
         this.endDt = endDt;
     }
