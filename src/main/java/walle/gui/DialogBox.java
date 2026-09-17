@@ -55,7 +55,9 @@ public class DialogBox extends HBox {
      * @return the dialog box.
      */
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.getStyleClass().add("user-dialog-box");
+        return db;
     }
 
     /**
@@ -68,6 +70,7 @@ public class DialogBox extends HBox {
     public static DialogBox getWalleDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.getStyleClass().add("walle-dialog-box");
         return db;
     }
 
