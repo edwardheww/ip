@@ -124,6 +124,9 @@ public class WALLE {
     // Runs one command and returns its reply text; throws on failure so
     // getResponse can turn that into an error-flagged Response.
     private String processCommand(String input) {
+        // Collapse leading/trailing/repeated whitespace so stray spacing (e.g.
+        // "  mark  1 ") doesn't stop the parser from recognising the command.
+        input = input.strip().replaceAll("\\s+", " ");
         CommandType type = parser.parseCommandType(input);
 
         switch (type) {
