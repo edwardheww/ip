@@ -45,11 +45,11 @@ public class Parser {
             return CommandType.UNMARK;
         } else if (input.matches("delete \\d+")) {
             return CommandType.DELETE;
-        } else if (input.strip().equals("todo") || input.startsWith("todo")) {
+        } else if (input.strip().equals("todo") || input.startsWith("todo ")) {
             return CommandType.TODO;
-        } else if (input.strip().equals("deadline") || input.startsWith("deadline")) {
+        } else if (input.strip().equals("deadline") || input.startsWith("deadline ")) {
             return CommandType.DEADLINE;
-        } else if (input.strip().equals("event") || input.startsWith("event")) {
+        } else if (input.strip().equals("event") || input.startsWith("event ")) {
             return CommandType.EVENT;
         } else if (input.strip().equals("find") || input.startsWith("find ")) {
             return CommandType.FIND;
