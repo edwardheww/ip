@@ -38,6 +38,15 @@
     -fx-border-width: 1;
 }
 
+/* Error replies: red border/text so mistakes catch the user's attention */
+.error-dialog-box .dialog-label {
+    -fx-background-color: #FDECEA;
+    -fx-text-fill: #B3261E;
+    -fx-border-color: #B3261E;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+}
+
 #userInput {
     -fx-background-radius: 8;
     -fx-padding: 8;
