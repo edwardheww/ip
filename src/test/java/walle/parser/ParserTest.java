@@ -62,23 +62,23 @@ public class ParserTest {
      * {@link walle.task.Deadline}/{@link walle.task.Event}'s own formatter, so this
      * test doesn't just echo back whatever pattern the production code happens to use.
      */
-    private static String expectedDateText(int year, int month, int day) {
+    private static String expectedDateText(int year, int month, int day, int hourMinute) {
         String monthAbbrev = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.getDefault());
-        return String.format("%s %02d %d", monthAbbrev, day, year);
+        return String.format("%s %02d %d %04d", monthAbbrev, day, year, hourMinute);
     }
 
     @Test
     public void parseTask_validDeadline_returnsCorrectlyFormattedTask() {
         Task task = parser.parseTask(CommandType.DEADLINE, "deadline submit report /by 2026-09-10 2359");
-        assertEquals("[D][ ] submit report (by: " + expectedDateText(2026, 9, 10) + ")", task.toString());
+        assertEquals("[D][ ] submit report (by: " + expectedDateText(2026, 9, 10, 2359) + ")", task.toString());
     }
 
     @Test
     public void parseTask_validEvent_returnsCorrectlyFormattedTask() {
         Task task = parser.parseTask(CommandType.EVENT,
                 "event team meeting /from 2026-09-05 1400 /to 2026-09-05 1500");
-        String expectedStart = expectedDateText(2026, 9, 5);
-        String expectedEnd = expectedDateText(2026, 9, 5);
+        String expectedStart = expectedDateText(2026, 9, 5, 1400);
+        String expectedEnd = expectedDateText(2026, 9, 5, 1500);
         assertEquals("[E][ ] team meeting (from: " + expectedStart + " to: " + expectedEnd + ")",
                 task.toString());
     }

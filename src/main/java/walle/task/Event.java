@@ -61,8 +61,8 @@ public class Event extends Task {
     public String toString() {
         return "[E]"
                 + super.toString()
-                + " (from: " + this.startDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
-                + " to: " + this.endDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
+                + " (from: " + this.startDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy HHmm"))
+                + " to: " + this.endDt.format(DateTimeFormatter.ofPattern("MMM dd yyyy HHmm"))
                 + ")";
     }
 

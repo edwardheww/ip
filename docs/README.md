@@ -51,7 +51,7 @@ Example: `deadline Submit CS2103T iP for grading /by 2026-09-19 2359`
 
 ```
 Got it! I've added the task:
-    [D][ ] Submit CS2103T iP for grading (by: Sept 19 2026)
+    [D][ ] Submit CS2103T iP for grading (by: Sept 19 2026 2359)
 Now you have 2 task(s) on your list!
 ```
 
@@ -67,7 +67,7 @@ Example: `event tP client meeting with Prof Damith /from 2026-09-20 1400 /to 202
 
 ```
 Got it! I've added the task:
-    [E][ ] tP client meeting with Prof Damith (from: Sept 20 2026 to: Sept 20 2026)
+    [E][ ] tP client meeting with Prof Damith (from: Sept 20 2026 1400 to: Sept 20 2026 1500)
 Now you have 3 task(s) on your list!
 ```
 
