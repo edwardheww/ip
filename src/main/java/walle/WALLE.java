@@ -135,64 +135,64 @@ public class WALLE {
         CommandType type = parser.parseCommandType(input);
 
         switch (type) {
-        case LIST:
-            return ui.formatTaskList(tasks.getTasks());
+            case LIST:
+                return ui.formatTaskList(tasks.getTasks());
 
-        case MARK: {
-            String response = ui.formatTaskMarkedUpdate(tasks.mark(parser.parseIndex(input)));
-            updateMemoryFile();
-            return response;
-        }
+            case MARK: {
+                String response = ui.formatTaskMarkedUpdate(tasks.mark(parser.parseIndex(input)));
+                updateMemoryFile();
+                return response;
+            }
 
-        case UNMARK: {
-            String response = ui.formatTaskUnmarkedUpdate(tasks.unmark(parser.parseIndex(input)));
-            updateMemoryFile();
-            return response;
-        }
+            case UNMARK: {
+                String response = ui.formatTaskUnmarkedUpdate(tasks.unmark(parser.parseIndex(input)));
+                updateMemoryFile();
+                return response;
+            }
 
-        case DELETE: {
-            int pos = parser.parseIndex(input);
-            Task tmp = tasks.delete(pos);
-            updateMemoryFile();
-            return ui.formatTaskDeletionUpdate(tmp, tasks.size());
-        }
+            case DELETE: {
+                int pos = parser.parseIndex(input);
+                Task tmp = tasks.delete(pos);
+                updateMemoryFile();
+                return ui.formatTaskDeletionUpdate(tmp, tasks.size());
+            }
 
-        case TODO:
-        case DEADLINE:
-        case EVENT: {
-            Task newTask = parser.parseTask(type, input);
-            tasks.add(newTask);
-            updateMemoryFile();
-            return ui.formatTaskAdditionUpdate(newTask, tasks.size());
-        }
+            case TODO:
+            case DEADLINE:
+            case EVENT: {
+                Task newTask = parser.parseTask(type, input);
+                tasks.add(newTask);
+                updateMemoryFile();
+                return ui.formatTaskAdditionUpdate(newTask, tasks.size());
+            }
 
-        case FIND: {
-            String keyword = parser.parseKeyword(input);
-            return ui.formatMatchingTasks(tasks.find(keyword));
-        }
+            case FIND: {
+                String keyword = parser.parseKeyword(input);
+                return ui.formatMatchingTasks(tasks.find(keyword));
+            }
 
-        case NOTE: {
-            Note newNote = new Note(parser.parseNoteText(input));
-            notes.add(newNote);
-            updateMemoryFile();
-            return ui.formatNoteAdditionUpdate(newNote, notes.size());
-        }
+            case NOTE: {
+                Note newNote = new Note(parser.parseNoteText(input));
+                notes.add(newNote);
+                updateMemoryFile();
+                return ui.formatNoteAdditionUpdate(newNote, notes.size());
+            }
 
-        case LIST_NOTES:
-            return ui.formatNoteList(notes.getNotes());
+            case LIST_NOTES:
+                return ui.formatNoteList(notes.getNotes());
 
-        case DELETE_NOTE: {
-            int pos = parser.parseIndex(input);
-            Note deletedNote = notes.delete(pos);
-            updateMemoryFile();
-            return ui.formatNoteDeletionUpdate(deletedNote, notes.size());
-        }
+            case DELETE_NOTE: {
+                int pos = parser.parseIndex(input);
+                Note deletedNote = notes.delete(pos);
+                updateMemoryFile();
+                return ui.formatNoteDeletionUpdate(deletedNote, notes.size());
+            }
 
-        default:
-            // Every CommandType is handled explicitly above; reaching here means a new
-            // value was added without updating this switch, which is a real bug -- fail
-            // loudly instead of silently returning a blank response.
-            throw new AssertionError("Unhandled CommandType: " + type);
+            default:
+                // Every CommandType is handled explicitly above; reaching here means a new
+                // value was added without updating this switch, which is a real bug -- fail
+                // loudly instead of silently returning a blank response.
+                throw new AssertionError("Unhandled CommandType: " + type);
         }
     }
 
