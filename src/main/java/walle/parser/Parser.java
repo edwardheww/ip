@@ -4,6 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import walle.exceptions.DuplicateArgException;
 import walle.exceptions.InvalidDtFormatException;
 import walle.exceptions.InvalidTaskTypeException;
 import walle.exceptions.MissingArgException;
@@ -150,6 +151,9 @@ public class Parser {
         if (deadlineParts.length < 2) {
             throw new MissingArgException("deadline", "/by");
         }
+        if (deadlineParts.length > 2) {
+            throw new DuplicateArgException("deadline", "/by");
+        }
         return new Deadline(deadlineParts[0], parseDateTime(deadlineParts[1]));
     }
 
@@ -162,9 +166,15 @@ public class Parser {
         if (eventParts.length < 2) {
             throw new MissingArgException("event", "/from");
         }
+        if (eventParts.length > 2) {
+            throw new DuplicateArgException("event", "/from");
+        }
         String[] eventTimes = eventParts[1].split(" /to ");
         if (eventTimes.length < 2) {
             throw new MissingArgException("event", "/to");
+        }
+        if (eventTimes.length > 2) {
+            throw new DuplicateArgException("event", "/to");
         }
         return new Event(eventParts[0], parseDateTime(eventTimes[0]), parseDateTime(eventTimes[1]));
     }
