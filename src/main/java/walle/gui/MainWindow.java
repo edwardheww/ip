@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import walle.Response;
 import walle.WALLE;
 
 /**
@@ -53,10 +54,10 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = walle.getResponse(input);
+        Response response = walle.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getWalleDialog(response, walleImage));
+                DialogBox.getWalleDialog(response.text(), walleImage));
         userInput.clear();
     }
 
