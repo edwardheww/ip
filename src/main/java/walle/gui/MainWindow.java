@@ -57,7 +57,7 @@ public class MainWindow extends AnchorPane {
         Response response = walle.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getWalleDialog(response.text(), walleImage));
+                DialogBox.getWalleDialog(response.text(), walleImage, response.isError()));
         userInput.clear();
     }
 

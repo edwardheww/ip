@@ -61,16 +61,34 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Creates a dialog box for a message from WALLE, left-aligned.
+     * Creates a dialog box for a normal (non-error) message from WALLE,
+     * left-aligned.
      *
      * @param text the message text.
      * @param img  WALLE's avatar image.
      * @return the dialog box.
      */
     public static DialogBox getWalleDialog(String text, Image img) {
+        return getWalleDialog(text, img, false);
+    }
+
+    /**
+     * Creates a dialog box for a message from WALLE, left-aligned, styled
+     * differently if it reports an error.
+     *
+     * @param text    the message text.
+     * @param img     WALLE's avatar image.
+     * @param isError whether the message reports an error, so it can be
+     *                styled to catch the user's attention.
+     * @return the dialog box.
+     */
+    public static DialogBox getWalleDialog(String text, Image img, boolean isError) {
         var db = new DialogBox(text, img);
         db.flip();
         db.getStyleClass().add("walle-dialog-box");
+        if (isError) {
+            db.getStyleClass().add("error-dialog-box");
+        }
         return db;
     }
 
