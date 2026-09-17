@@ -4,6 +4,7 @@ package walle.parser;
  * The kinds of command WALLE recognises, as classified by {@link Parser}.
  */
 public enum CommandType {
+    BYE,
     LIST,
     MARK,
     UNMARK,

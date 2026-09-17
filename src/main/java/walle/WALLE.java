@@ -87,13 +87,13 @@ public class WALLE {
     private void runCli() {
         System.out.println(greeting);
 
-        String input = ui.readCommand();
-        while (!input.equals("bye")) {
-            System.out.println(getResponse(input).text());
-            input = ui.readCommand();
-        }
+        Response response;
+        do {
+            String input = ui.readCommand();
+            response = getResponse(input);
+            System.out.println(response.text());
+        } while (!response.isExit());
 
-        System.out.println(ui.formatFarewell());
         ui.closeScanner();
     }
 
@@ -116,25 +116,27 @@ public class WALLE {
      */
     public Response getResponse(String input) {
         try {
-            return new Response(processCommand(input), false);
+            // Collapse leading/trailing/repeated whitespace so stray spacing (e.g.
+            // "  mark  1 ") doesn't stop the parser from recognising the command.
+            String normalized = input.strip().replaceAll("\\s+", " ");
+            CommandType type = parser.parseCommandType(normalized);
+            return new Response(processCommand(type, normalized), false, type == CommandType.BYE);
         } catch (WALLEException e) {
-            return new Response(ui.formatErrorMessage(e), true);
+            return new Response(ui.formatErrorMessage(e), true, false);
         } catch (RuntimeException e) {
             // Last-resort catch-all for unanticipated bugs, so a caller (CLI or GUI)
             // gets a visible message instead of the whole interface crashing/hanging.
-            return new Response(ui.formatErrorMessage(e), true);
+            return new Response(ui.formatErrorMessage(e), true, false);
         }
     }
 
-    // Runs one command and returns its reply text; throws on failure so
-    // getResponse can turn that into an error-flagged Response.
-    private String processCommand(String input) {
-        // Collapse leading/trailing/repeated whitespace so stray spacing (e.g.
-        // "  mark  1 ") doesn't stop the parser from recognising the command.
-        input = input.strip().replaceAll("\\s+", " ");
-        CommandType type = parser.parseCommandType(input);
-
+    // Runs one already-classified command and returns its reply text; throws on
+    // failure so getResponse can turn that into an error-flagged Response.
+    private String processCommand(CommandType type, String input) {
         switch (type) {
+            case BYE:
+                return ui.formatFarewell();
+
             case LIST:
                 return ui.formatTaskList(tasks.getTasks());
 

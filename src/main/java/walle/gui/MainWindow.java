@@ -1,5 +1,7 @@
 package walle.gui;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -7,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import walle.Response;
 import walle.WALLE;
 
@@ -52,6 +55,8 @@ public class MainWindow extends AnchorPane {
     /**
      * Creates two dialog boxes, one echoing user input and the other containing WALLE's
      * reply, then appends them to the dialog container. Clears user input after processing.
+     * If the response is WALLE's farewell (a {@code bye} command), closes the app shortly
+     * after so the user has time to read it.
      */
     @FXML
     private void handleUserInput() {
@@ -61,6 +66,12 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getWalleDialog(response.text(), walleImage, response.isError()));
         userInput.clear();
+
+        if (response.isExit()) {
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(event -> Platform.exit());
+            delay.play();
+        }
     }
 
 }

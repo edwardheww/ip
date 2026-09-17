@@ -38,7 +38,9 @@ public class Parser {
      * @throws InvalidTaskTypeException if the input does not match any known command.
      */
     public CommandType parseCommandType(String input) throws InvalidTaskTypeException {
-        if (input.equals("list")) {
+        if (input.equals("bye")) {
+            return CommandType.BYE;
+        } else if (input.equals("list")) {
             return CommandType.LIST;
         } else if (input.matches("mark \\d+")) {
             return CommandType.MARK;
