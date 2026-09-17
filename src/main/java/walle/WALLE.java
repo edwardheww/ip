@@ -2,6 +2,7 @@ package walle;
 
 import java.io.IOException;
 
+import walle.exceptions.SaveFailedException;
 import walle.exceptions.WALLEException;
 import walle.note.Note;
 import walle.note.NoteList;
@@ -197,7 +198,10 @@ public class WALLE {
             storage.save(tasks.getTasks());
             storage.saveNotes(notes.getNotes());
         } catch (IOException e) {
-            System.out.println(ui.formatErrorMessage(e));
+            // Previously this only printed to System.out, which the GUI never shows --
+            // a failed save looked identical to a successful one. Throw instead so the
+            // failure reaches the user as part of the response, in both CLI and GUI.
+            throw new SaveFailedException(e.getMessage());
         }
     }
 
